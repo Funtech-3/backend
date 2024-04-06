@@ -1,21 +1,30 @@
 from django.db import models
 
-
-REGISTRATION_STATUSES = [
-    ("OPEN", "Регистрация открыта"),
-    ("CLOSED", "Регистрация завершена"),
-    ("PENDING", "Ожидание регистрации")
-]
-
-EVENT_MODES = [
-    ("ONLINE", "Онлайн"),
-    ("OFFLINE", "Офлайн")
-]
+from .constants import (
+    EVENT_MODES,
+    EVENT_REGISTRATION_STATUSES,
+    MAX_CITY_NAME,
+    MAX_EVENT_ADDRESS,
+    MAX_EVENT_MODE,
+    MAX_EVENT_REG_STATUS,
+    MAX_EVENT_SLUG,
+    MAX_EVENT_TITLE,
+    MAX_FIRST_NAME,
+    MAX_LAST_NAME,
+    MAX_POSITION,
+    MAX_STEP_TITLE,
+    MAX_TAG_TITLE,
+    MAX_WORK_PLACE,
+)
 
 
 class City(models.Model):
     """Модель городов."""
-    name = models.CharField("Название города", max_length=150, unique=True)
+    name = models.CharField(
+        verbose_name="Название города",
+        max_length=MAX_CITY_NAME,
+        unique=True
+    )
 
     class Meta:
         verbose_name = "Город"
@@ -27,7 +36,11 @@ class City(models.Model):
 
 class Tag(models.Model):
     """Модель тегов."""
-    title = models.CharField("Название тега", max_length=150, unique=True)
+    title = models.CharField(
+        verbose_name="Название тега",
+        max_length=MAX_TAG_TITLE,
+        unique=True
+    )
 
     class Meta:
         verbose_name = "Тег"
@@ -39,11 +52,27 @@ class Tag(models.Model):
 
 class Speaker(models.Model):
     """Модель спикеров."""
-    first_name = models.CharField("Имя", max_length=150)
-    last_name = models.CharField("Фамилия", max_length=150)
-    work_place = models.CharField("Место работы", max_length=256)
-    position = models.CharField("Должность", max_length=256)
-    image = models.ImageField("Фото", upload_to="speakers")
+    first_name = models.CharField(
+        verbose_name="Имя",
+        max_length=MAX_FIRST_NAME
+    )
+    last_name = models.CharField(
+        verbose_name="Фамилия",
+        max_length=MAX_LAST_NAME
+    )
+    work_place = models.CharField(
+        verbose_name="Место работы",
+        max_length=MAX_WORK_PLACE
+    )
+    position = models.CharField(
+        verbose_name="Должность",
+        max_length=MAX_POSITION
+    )
+    image = models.ImageField(
+        verbose_name="Фото",
+        upload_to="speakers",
+        blank=True
+    )
 
     class Meta:
         verbose_name = "Спикер"
@@ -58,28 +87,39 @@ class Speaker(models.Model):
 
 
 class Event(models.Model):
-    """Модель события."""
-    title = models.CharField("Название", max_length=150)
-    description = models.TextField("Описание")
-    slug = models.CharField("Символьный код", max_length=150, unique=True)
+    """Модель событий."""
+    title = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_EVENT_TITLE
+    )
+    description = models.TextField(verbose_name="Описание")
+    slug = models.CharField(
+        verbose_name="Символьный код",
+        max_length=MAX_EVENT_SLUG,
+        unique=True
+    )
     city = models.ForeignKey(
         City,
         on_delete=models.PROTECT,
         verbose_name="Город проведения"
     )
-    address = models.CharField("Адрес", max_length=150)
-    date = models.DateField("Дата проведения", null=True)
+    address = models.CharField(
+        verbose_name="Адрес",
+        max_length=MAX_EVENT_ADDRESS
+    )
+    date = models.DateField(verbose_name="Дата проведения", null=True)
     registration_status = models.CharField(
-        "Статус регистрации",
-        max_length=7,
-        choices=REGISTRATION_STATUSES
+        verbose_name="Статус регистрации",
+        max_length=MAX_EVENT_REG_STATUS,
+        choices=EVENT_REGISTRATION_STATUSES
     )
     tags = models.ManyToManyField(Tag)
     mode = models.CharField(
-        "Формат проведения",
-        max_length=7,
+        verbose_name="Формат проведения",
+        max_length=MAX_EVENT_MODE,
         choices=EVENT_MODES
     )
+    image = models.ImageField(verbose_name="Фото", upload_to="events")
 
     class Meta:
         verbose_name = "Событие"
@@ -92,10 +132,13 @@ class Event(models.Model):
 
 
 class EventStep(models.Model):
-    """Модель этапов программы события."""
-    title = models.CharField("Название", max_length=256)
-    start_time = models.TimeField("Начало этапа")
-    description = models.TextField("Описание", blank=True)
+    """Модель этапов события."""
+    title = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_STEP_TITLE
+    )
+    start_time = models.TimeField(verbose_name="Начало этапа")
+    description = models.TextField(verbose_name="Описание", blank=True)
     speakers = models.ManyToManyField(
         Speaker,
         blank=True,
@@ -108,8 +151,8 @@ class EventStep(models.Model):
     )
 
     class Meta:
-        verbose_name = "Этап мероприятия"
-        verbose_name_plural = "этапы мероприятия"
+        verbose_name = "Этап события"
+        verbose_name_plural = "этапы события"
         ordering = ('start_time',)
 
     def __str__(self):
