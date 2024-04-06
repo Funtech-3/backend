@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from .constants import (
@@ -16,6 +17,9 @@ from .constants import (
     MAX_TAG_TITLE,
     MAX_WORK_PLACE,
 )
+
+
+User = get_user_model()
 
 
 class City(models.Model):
@@ -120,6 +124,12 @@ class Event(models.Model):
         choices=EVENT_MODES
     )
     image = models.ImageField(verbose_name="Фото", upload_to="events")
+    favorited_by = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name="favorite_events",
+        verbose_name="Добавили в избранное"
+    )
 
     class Meta:
         verbose_name = "Событие"
