@@ -43,6 +43,7 @@ LOCAL_APPS = [
     "events.apps.EventsConfig",
     "tickets.apps.TicketsConfig",
     "users.apps.UsersConfig",
+    "api.v1.apps.ApiConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
