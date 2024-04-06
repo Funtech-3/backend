@@ -13,7 +13,6 @@ User = get_user_model()
 
 class Ticket(models.Model):
     """Модель Билет."""
-
     qr_code = models.ImageField(verbose_name="QR-код", upload_to='qr_codes')
     code = models.UUIDField(
         verbose_name="Уникальный код",
