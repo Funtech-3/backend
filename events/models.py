@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from users.models import Tag
 
 from .constants import (
     EVENT_MODES,
@@ -14,10 +15,8 @@ from .constants import (
     MAX_LAST_NAME,
     MAX_POSITION,
     MAX_STEP_TITLE,
-    MAX_TAG_TITLE,
     MAX_WORK_PLACE,
 )
-
 
 User = get_user_model()
 
@@ -36,22 +35,6 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Tag(models.Model):
-    """Модель тегов."""
-    title = models.CharField(
-        verbose_name="Название тега",
-        max_length=MAX_TAG_TITLE,
-        unique=True
-    )
-
-    class Meta:
-        verbose_name = "Тег"
-        verbose_name_plural = "теги"
-
-    def __str__(self):
-        return self.title
 
 
 class Speaker(models.Model):
