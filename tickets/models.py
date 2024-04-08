@@ -72,7 +72,7 @@ class Registration(models.Model):
         """Класс настроек модели Registration."""
         verbose_name = "Регистрация"
         verbose_name_plural = "регистрации"
-        default_related_name = "registrations"
+        default_related_name = "ticket_registrations"
 
     def ___str__(self):
         """Строковое представление модели Регистрация."""
