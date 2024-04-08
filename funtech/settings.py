@@ -25,9 +25,6 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "event",
-    "ticket",
-    "user",
 ]
 
 THIRD_PARTY_APPS = [
