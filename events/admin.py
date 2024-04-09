@@ -1,3 +1,22 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import City, Event, EventStep, Tag, Speaker
+
+
+class EventStepInline(admin.StackedInline):
+    model = EventStep
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    inlines = [EventStepInline]
+    list_display = (
+        'title',
+        'city',
+        'date'
+    )
+
+
+admin.site.register(City)
+admin.site.register(Tag)
+admin.site.register(Speaker)
