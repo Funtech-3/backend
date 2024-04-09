@@ -182,6 +182,7 @@ class EventStep(models.Model):
     class Meta:
         verbose_name = "Этап события"
         verbose_name_plural = "этапы события"
+        default_related_name = "steps"
         ordering = ('start_time',)
 
     def __str__(self):
