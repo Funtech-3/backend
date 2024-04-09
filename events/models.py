@@ -1,21 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from users.models import Tag
+from django.utils.translation import gettext_lazy as _
 
+from users.models import Tag
 from .constants import (
-    EVENT_MODES,
-    EVENT_REGISTRATION_STATUSES,
-    MAX_CITY_NAME,
-    MAX_EVENT_ADDRESS,
+    MAX_CHAR_FOR_EVENTS,
     MAX_EVENT_MODE,
     MAX_EVENT_REG_STATUS,
-    MAX_EVENT_SLUG,
-    MAX_EVENT_TITLE,
-    MAX_FIRST_NAME,
-    MAX_LAST_NAME,
-    MAX_POSITION,
-    MAX_STEP_TITLE,
-    MAX_WORK_PLACE,
+    MAX_LONG_CHAR_FOR_EVENTS
 )
 
 User = get_user_model()
@@ -25,7 +17,7 @@ class City(models.Model):
     """Модель городов."""
     name = models.CharField(
         verbose_name="Название города",
-        max_length=MAX_CITY_NAME,
+        max_length=MAX_CHAR_FOR_EVENTS,
         unique=True
     )
 
@@ -41,19 +33,19 @@ class Speaker(models.Model):
     """Модель спикеров."""
     first_name = models.CharField(
         verbose_name="Имя",
-        max_length=MAX_FIRST_NAME
+        max_length=MAX_CHAR_FOR_EVENTS
     )
     last_name = models.CharField(
         verbose_name="Фамилия",
-        max_length=MAX_LAST_NAME
+        max_length=MAX_CHAR_FOR_EVENTS
     )
     work_place = models.CharField(
         verbose_name="Место работы",
-        max_length=MAX_WORK_PLACE
+        max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     position = models.CharField(
         verbose_name="Должность",
-        max_length=MAX_POSITION
+        max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     image = models.ImageField(
         verbose_name="Фото",
@@ -75,43 +67,53 @@ class Speaker(models.Model):
 
 class Event(models.Model):
     """Модель событий."""
+
+    class RegistrationStatus(models.TextChoices):
+        OPEN = "OPEN", _("Регистрация открыта")
+        CLOSED = "CLOSED", _("Регистрация завершена")
+        PENDING = "PENDING", _("Ожидание регистрации")
+
+    class EventMode(models.TextChoices):
+        ONLINE = "ONLINE", _("Онлайн")
+        OFFLINE = "OFFLINE", _("Офлайн")
+
     title = models.CharField(
         verbose_name="Название",
-        max_length=MAX_EVENT_TITLE
+        max_length=MAX_CHAR_FOR_EVENTS
     )
     description = models.TextField(verbose_name="Описание")
     slug = models.CharField(
         verbose_name="Символьный код",
-        max_length=MAX_EVENT_SLUG,
+        max_length=MAX_CHAR_FOR_EVENTS,
         unique=True
     )
     city = models.ForeignKey(
-        City,
+        to=City,
         on_delete=models.PROTECT,
         verbose_name="Город проведения"
     )
     address = models.CharField(
         verbose_name="Адрес",
-        max_length=MAX_EVENT_ADDRESS
+        max_length=MAX_CHAR_FOR_EVENTS
     )
     date = models.DateField(verbose_name="Дата проведения", null=True)
     registration_status = models.CharField(
         verbose_name="Статус регистрации",
         max_length=MAX_EVENT_REG_STATUS,
-        choices=EVENT_REGISTRATION_STATUSES
+        choices=RegistrationStatus.choices,
     )
     tags = models.ManyToManyField(Tag)
     mode = models.CharField(
         verbose_name="Формат проведения",
         max_length=MAX_EVENT_MODE,
-        choices=EVENT_MODES
+        choices=EventMode.choices
     )
     image = models.ImageField(
         verbose_name="Фото",
         upload_to="events",
     )
     favorited_by = models.ManyToManyField(
-        User,
+        to=User,
         blank=True,
         related_name="favorite_events",
         verbose_name="Добавили в избранное"
@@ -131,17 +133,17 @@ class EventStep(models.Model):
     """Модель этапов события."""
     title = models.CharField(
         verbose_name="Название",
-        max_length=MAX_STEP_TITLE
+        max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     start_time = models.TimeField(verbose_name="Начало этапа")
     description = models.TextField(verbose_name="Описание", blank=True)
     speakers = models.ManyToManyField(
-        Speaker,
+        to=Speaker,
         blank=True,
         verbose_name="Спикер",
     )
     event = models.ForeignKey(
-        Event,
+        to=Event,
         on_delete=models.CASCADE,
         verbose_name="Событие"
     )
