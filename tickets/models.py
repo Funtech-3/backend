@@ -13,7 +13,10 @@ User = get_user_model()
 
 class Ticket(models.Model):
     """Модель Билет."""
-    qr_code = models.ImageField(verbose_name="QR-код", upload_to='qr_codes')
+    qr_code = models.ImageField(
+        verbose_name="QR-код",
+        upload_to='ticket/images',
+        )
     code = models.UUIDField(
         verbose_name="Уникальный код",
         default=uuid.uuid4,
@@ -22,13 +25,13 @@ class Ticket(models.Model):
         help_text="Уникальный код для кодирования данных о билете в QR-код.",
     )
 
-    def __str__(self):
-        return self.code
-
     class Meta:
         """Класс настроек модели Ticket."""
         verbose_name = "Билет"
         verbose_name_plural = "билеты"
+
+    def __str__(self):
+        return self.code
 
 
 class Registration(models.Model):
@@ -44,30 +47,33 @@ class Registration(models.Model):
         to=Event,
         on_delete=models.CASCADE,
         verbose_name="Событие",
-        related_name='registrations',
     )
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         verbose_name="Участник",
-        related_name='registrations',
     )
     status = models.CharField(
         choices=Status,
         max_length=STATUS_MAX_LENGTH,
         verbose_name="Статус регистрации",
-        related_name='статусы регистрации',
     )
     date_create = models.DateField(
         auto_now_add=True,
         verbose_name="Дата регистрации",
-        related_name='даты регистрации',
     )
     ticket = models.ForeignKey(
-        to=Ticket, on_delete=models.CASCADE, related_name="registrations"
+        to=Ticket,
+        on_delete=models.CASCADE,
+        verbose_name="Билет",
     )
 
     class Meta:
         """Класс настроек модели Registration."""
         verbose_name = "Регистрация"
         verbose_name_plural = "регистрации"
+        default_related_name = "ticket_registrations"
+
+    def ___str__(self):
+        """Строковое представление модели Регистрация."""
+        return f"{self.date_create} - {self.status}"
