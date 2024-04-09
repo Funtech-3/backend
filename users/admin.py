@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from tickets.models import Registration
 
 from .constants import LIMIT_POSTS_PER_PAGE
-from .models import Notifications
+from .models import NotificationSwitch
 
 User = get_user_model()
 
@@ -91,8 +91,8 @@ class UserAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Notifications)
-class UserAdmin(admin.ModelAdmin):
+@admin.register(NotificationSwitch)
+class NotificationsAdmin(admin.ModelAdmin):
     """Настройка отображения для кастомной модели User."""
 
     list_display = (

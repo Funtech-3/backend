@@ -1,16 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator, validate_email
+from django.core.validators import validate_email
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 from .constants import (
     MAX_LENGTH_EMAIL,
     MAX_LENGTH_STRING_FOR_USER,
     MAX_PHONE_NUMBER_LENGTH,
-    REGEX_CHAR_USERNAME,
-    REGEX_ERROR_TEXT,
 )
-from .validators import validate_mobile, validate_username
+from .validators import validate_mobile, validate_telegram, validate_username
 
 
 class Tag(models.Model):
@@ -30,26 +27,26 @@ class Tag(models.Model):
         return self.title
 
 
-class Notifications(models.Model):
+class NotificationSwitch(models.Model):
     """Модель найстроек уведомлений."""
 
-    notification = models.BooleanField(
+    is_notification = models.BooleanField(
         verbose_name="Общий флаг активации уведомлений",
         default=False,
     )
-    email_notification = models.BooleanField(
+    is_email = models.BooleanField(
         verbose_name="Уведомления по электронной почте",
         default=False,
     )
-    telegram_notification = models.BooleanField(
+    is_telegram = models.BooleanField(
         verbose_name="Уведомления в телеграм",
         default=False,
     )
-    phone_notification = models.BooleanField(
+    is_phone = models.BooleanField(
         verbose_name="Уведомления по СМС",
         default=False,
     )
-    push_notification = models.BooleanField(
+    is_push = models.BooleanField(
         verbose_name="Пуш уведомления",
         default=False,
     )
@@ -74,13 +71,7 @@ class CustomUser(AbstractUser):
         verbose_name="Уникальный юзернейм",
         max_length=MAX_LENGTH_STRING_FOR_USER,
         unique=True,
-        validators=(
-            RegexValidator(
-                regex=REGEX_CHAR_USERNAME,
-                message=_(REGEX_ERROR_TEXT),
-            ),
-            validate_username,
-        ),
+        validators=(validate_username,),
     )
     password = models.CharField(
         verbose_name="Пароль",
@@ -101,6 +92,7 @@ class CustomUser(AbstractUser):
     telegram_username = models.CharField(
         verbose_name="Ник в телеграм",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        validators=(validate_telegram,),
     )
     position = models.CharField(
         verbose_name="Должность",
@@ -120,7 +112,7 @@ class CustomUser(AbstractUser):
     )
     notifications = models.ForeignKey(
         verbose_name="Настройки уведомлений",
-        to=Notifications,
+        to=NotificationSwitch,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -129,6 +121,11 @@ class CustomUser(AbstractUser):
     yandex_id = models.PositiveBigIntegerField(
         verbose_name="Связанный Яндекс ID",
         blank=True,
+        null=True,
+    )
+    avatar = models.ImageField(
+        verbose_name="Ссылка на фото",
+        upload_to="users/images/",
         null=True,
     )
 

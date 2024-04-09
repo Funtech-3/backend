@@ -106,7 +106,10 @@ class Event(models.Model):
         max_length=MAX_EVENT_MODE,
         choices=EVENT_MODES
     )
-    image = models.ImageField(verbose_name="Фото", upload_to="events")
+    image = models.ImageField(
+        verbose_name="Фото",
+        upload_to="events",
+    )
     favorited_by = models.ManyToManyField(
         User,
         blank=True,
