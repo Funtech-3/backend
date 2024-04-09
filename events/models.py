@@ -29,6 +29,22 @@ class City(models.Model):
         return self.name
 
 
+class EventType(models.Model):
+    """Модель типов событий."""
+    title = models.CharField(
+        verbose_name="Название типа",
+        max_length=MAX_CHAR_FOR_EVENTS,
+        unique=True
+    )
+
+    class Meta:
+        verbose_name = "Тип события"
+        verbose_name_plural = "типы событий"
+
+    def __str__(self):
+        return self.title
+
+
 class Speaker(models.Model):
     """Модель спикеров."""
     first_name = models.CharField(
@@ -49,7 +65,7 @@ class Speaker(models.Model):
     )
     image = models.ImageField(
         verbose_name="Фото",
-        upload_to="speakers",
+        upload_to="events/images/speakers",
         blank=True
     )
 
@@ -102,15 +118,30 @@ class Event(models.Model):
         max_length=MAX_EVENT_REG_STATUS,
         choices=RegistrationStatus.choices,
     )
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(
+        to=Tag,
+        verbose_name="Теги"
+    )
     mode = models.CharField(
         verbose_name="Формат проведения",
         max_length=MAX_EVENT_MODE,
         choices=EventMode.choices
     )
+    type = models.ForeignKey(
+        to=EventType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    preview_image = models.ImageField(
+        verbose_name="Превью-фото события",
+        upload_to="events/images/event/preview",
+        blank=True,
+        null=True
+    )
     image = models.ImageField(
-        verbose_name="Фото",
-        upload_to="events",
+        verbose_name="Фото для страницы события",
+        upload_to="events/images/event/detail",
     )
     favorited_by = models.ManyToManyField(
         to=User,
@@ -140,7 +171,7 @@ class EventStep(models.Model):
     speakers = models.ManyToManyField(
         to=Speaker,
         blank=True,
-        verbose_name="Спикер",
+        verbose_name="Спикеры",
     )
     event = models.ForeignKey(
         to=Event,
