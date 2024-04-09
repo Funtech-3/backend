@@ -96,17 +96,17 @@ class NotificationsAdmin(admin.ModelAdmin):
     """Настройка отображения для кастомной модели User."""
 
     list_display = (
-        "notification",
-        "email_notification",
-        "telegram_notification",
-        "phone_notification",
-        "push_notification",
+        "is_notification",
+        "is_email",
+        "is_telegram",
+        "is_phone",
+        "is_push",
     )
     list_editable = (
-        "email_notification",
-        "telegram_notification",
-        "phone_notification",
-        "push_notification",
+        "is_email",
+        "is_telegram",
+        "is_phone",
+        "is_push",
     )
     ordering = ("id",)
     list_per_page = LIMIT_POSTS_PER_PAGE
