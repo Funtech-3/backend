@@ -7,7 +7,7 @@ User = get_user_model()
 class CustomUserSerializer(serializers.ModelSerializer):
     """Сериализатор кастомноой модели юзер, с использованием JSON ЯндексID."""
 
-    yandex_id = serializers.CharField(source="id")
+    yandex_id = serializers.IntegerField(source="id")
     username = serializers.CharField(source="login")
     email = serializers.EmailField(source="default_email")
     phone_number = serializers.CharField(source="default_phone.number")

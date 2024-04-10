@@ -26,35 +26,6 @@ class Tag(models.Model):
         return self.title
 
 
-class NotificationSwitch(models.Model):
-    """Модель найстроек уведомлений."""
-
-    is_notification = models.BooleanField(
-        verbose_name="Общий флаг активации уведомлений",
-        default=False,
-    )
-    is_email = models.BooleanField(
-        verbose_name="Уведомления по электронной почте",
-        default=False,
-    )
-    is_telegram = models.BooleanField(
-        verbose_name="Уведомления в телеграм",
-        default=False,
-    )
-    is_phone = models.BooleanField(
-        verbose_name="Уведомления по СМС",
-        default=False,
-    )
-    is_push = models.BooleanField(
-        verbose_name="Пуш уведомления",
-        default=False,
-    )
-
-    class Meta:
-        verbose_name = "Уведомление"
-        verbose_name_plural = "Уведомления"
-
-
 class CustomUser(AbstractUser):
     """Модель пользователя для приложения."""
     USERNAME_FIELD = "yandex_id"
@@ -108,21 +79,11 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True,
     )
-    tags = models.ForeignKey(
+    tags = models.ManyToManyField(
         verbose_name="Интересы",
         to=Tag,
-        on_delete=models.SET_NULL,
         blank=True,
-        null=True,
-        related_name="user_tags",
-    )
-    notifications = models.ForeignKey(
-        verbose_name="Настройки уведомлений",
-        to=NotificationSwitch,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="user_notifications",
+        related_name="users",
     )
     avatar = models.ImageField(
         verbose_name="Ссылка на фото",
@@ -146,3 +107,38 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.full_name}"
+
+
+class NotificationSwitch(models.Model):
+    """Модель найстроек уведомлений."""
+
+    user = models.OneToOneField(
+        verbose_name="Пользователь",
+        to=CustomUser,
+        on_delete=models.CASCADE,
+        related_name="user_notifications",
+    )
+    is_notification = models.BooleanField(
+        verbose_name="Общий флаг активации уведомлений",
+        default=False,
+    )
+    is_email = models.BooleanField(
+        verbose_name="Уведомления по электронной почте",
+        default=False,
+    )
+    is_telegram = models.BooleanField(
+        verbose_name="Уведомления в телеграм",
+        default=False,
+    )
+    is_phone = models.BooleanField(
+        verbose_name="Уведомления по СМС",
+        default=False,
+    )
+    is_push = models.BooleanField(
+        verbose_name="Пуш уведомления",
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = "Уведомление"
+        verbose_name_plural = "Уведомления"
