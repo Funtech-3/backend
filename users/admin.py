@@ -21,7 +21,6 @@ class RegistrationInline(admin.TabularInline):
     model = Registration
     fields = (
         "status",
-        "ticket",
         "event",
     )
 

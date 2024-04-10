@@ -1,37 +1,14 @@
 """Модуль моделей приложения tickets."""
 
-import uuid
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from events.models import Event
-from .constants import STATUS_MAX_LENGTH
+from .constants import STATUS_MAX_LENGTH, TICKET_CODE_LENGTH
+from .utils import get_uuid_str
 
 User = get_user_model()
-
-
-class Ticket(models.Model):
-    """Модель Билет."""
-    qr_code = models.ImageField(
-        verbose_name="QR-код",
-        upload_to='ticket/images',
-        )
-    code = models.UUIDField(
-        verbose_name="Уникальный код",
-        default=uuid.uuid4,
-        editable=False,
-        unique=True,
-        help_text="Уникальный код для кодирования данных о билете в QR-код.",
-    )
-
-    class Meta:
-        """Класс настроек модели Ticket."""
-        verbose_name = "Билет"
-        verbose_name_plural = "билеты"
-
-    def __str__(self):
-        return self.code
 
 
 class Registration(models.Model):
@@ -39,6 +16,7 @@ class Registration(models.Model):
 
     class Status(models.TextChoices):
         """Перечисление статусов регистрации."""
+
         PENDING = "PENDING", _("Ожидание подтверждения")
         REJECTED = "REJECTED", _("Заявка отклонена")
         CONFIRMED = "CONFIRMED", _("Вы участвуете")
@@ -57,15 +35,19 @@ class Registration(models.Model):
         choices=Status,
         max_length=STATUS_MAX_LENGTH,
         verbose_name="Статус регистрации",
+        default=Status.PENDING,
     )
     date_create = models.DateField(
         auto_now_add=True,
         verbose_name="Дата регистрации",
     )
-    ticket = models.ForeignKey(
-        to=Ticket,
-        on_delete=models.CASCADE,
-        verbose_name="Билет",
+    ticket_code = models.CharField(
+        verbose_name="Уникальный код",
+        default=get_uuid_str,
+        auto_created=True,
+        unique=True,
+        max_length=TICKET_CODE_LENGTH,
+        help_text="Уникальный код для кодирования данных о билете в QR-код.",
     )
 
     class Meta:
@@ -77,3 +59,19 @@ class Registration(models.Model):
     def ___str__(self):
         """Строковое представление модели Регистрация."""
         return f"{self.date_create} - {self.status}"
+
+    @property
+    def code(self):
+        """Показывает код билета только если регистрация подтверждена,
+        иначе пустая строка."""
+        if self.status == Registration.Status.CONFIRMED:
+            return self.ticket_code
+        return ""
+
+    @property
+    def ticket_id(self):
+        """Показывает ticket_id код билета только если регистрация
+        подтверждена, иначе None."""
+        if self.status == Registration.Status.CONFIRMED:
+            return self.pk
+        return None
