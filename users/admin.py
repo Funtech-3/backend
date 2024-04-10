@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from tickets.models import Registration
 
+from tickets.models import Registration
 from .constants import LIMIT_POSTS_PER_PAGE
 from .models import NotificationSwitch
 
@@ -61,7 +61,7 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = LIMIT_POSTS_PER_PAGE
 
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "yandex_id")}),
         (
             "Персональные данные",
             {

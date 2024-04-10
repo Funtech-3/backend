@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import validate_email
 from django.db import models
 
 from .constants import (
@@ -7,7 +6,7 @@ from .constants import (
     MAX_LENGTH_STRING_FOR_USER,
     MAX_PHONE_NUMBER_LENGTH,
 )
-from .validators import validate_mobile, validate_telegram, validate_username
+from .validators import validate_mobile, validate_telegram
 
 
 class Tag(models.Model):
@@ -58,49 +57,56 @@ class NotificationSwitch(models.Model):
 
 class CustomUser(AbstractUser):
     """Модель пользователя для приложения."""
-
+    USERNAME_FIELD = "yandex_id"
+    yandex_id = models.PositiveBigIntegerField(
+        verbose_name="Связанный Яндекс ID",
+        unique=True,
+    )
     first_name = models.CharField(
         verbose_name="Имя",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        blank=True,
+        null=True,
     )
     last_name = models.CharField(
         verbose_name="Фамилия",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        blank=True,
+        null=True,
     )
     username = models.CharField(
-        verbose_name="Уникальный юзернейм",
-        max_length=MAX_LENGTH_STRING_FOR_USER,
-        unique=True,
-        validators=(validate_username,),
-    )
-    password = models.CharField(
-        verbose_name="Пароль",
+        verbose_name="Логин из яндекс",
         max_length=MAX_LENGTH_STRING_FOR_USER,
     )
     email = models.EmailField(
         verbose_name="Адрес электронной почты",
         max_length=MAX_LENGTH_EMAIL,
-        unique=True,
-        validators=(validate_email,),
     )
     phone_number = models.CharField(
         verbose_name="Номер телефона",
         max_length=MAX_PHONE_NUMBER_LENGTH,
-        unique=True,
+        blank=True,
+        null=True,
         validators=(validate_mobile,),
     )
     telegram_username = models.CharField(
         verbose_name="Ник в телеграм",
         max_length=MAX_LENGTH_STRING_FOR_USER,
         validators=(validate_telegram,),
+        blank=True,
+        null=True,
     )
     position = models.CharField(
         verbose_name="Должность",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        blank=True,
+        null=True,
     )
     work_place = models.CharField(
-        verbose_name="Место работы(компания)",
+        verbose_name="Место работы (компания)",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        blank=True,
+        null=True,
     )
     tags = models.ForeignKey(
         verbose_name="Интересы",
@@ -118,27 +124,21 @@ class CustomUser(AbstractUser):
         null=True,
         related_name="user_notifications",
     )
-    yandex_id = models.PositiveBigIntegerField(
-        verbose_name="Связанный Яндекс ID",
-        blank=True,
-        null=True,
-    )
     avatar = models.ImageField(
         verbose_name="Ссылка на фото",
         upload_to="users/images/",
+        blank=True,
         null=True,
+        default="https://avatars.yandex.net/get-yapic/<default_avatar_id>/",
     )
 
     class Meta:
-        ordering = ("username",)
+        ordering = (
+            "id",
+            "username",
+        )
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-        constraints = [
-            models.UniqueConstraint(
-                fields=("username", "email"),
-                name="unique_user_with_email",
-            ),
-        ]
 
     @property
     def full_name(self):

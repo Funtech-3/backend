@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import City, Event, EventStep, Tag, Speaker, EventType
+from .models import City, Event, EventStep, EventType, Speaker, Tag
 
 
 class EventStepInline(admin.StackedInline):
