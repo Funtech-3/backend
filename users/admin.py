@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from tickets.models import Registration
 
 from .constants import LIMIT_POSTS_PER_PAGE
-from .models import NotificationSwitch, Tag
+from .models import NotificationSwitch
 
 User = get_user_model()
 
@@ -13,13 +13,6 @@ admin.site.site_title = "Портал администраторов 'Funtech'"
 admin.site.index_title = (
     "Добро пожаловать, здесь можно найти мероприятие по душе!"
 )
-
-
-class TagInline(admin.TabularInline):
-    """Вложенное отображение модели Tag для User."""
-
-    model = Tag
-    extra = 2
 
 
 class RegistrationInline(admin.TabularInline):
@@ -36,7 +29,7 @@ class RegistrationInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     """Настройка отображения для кастомной модели User."""
 
-    inlines = [RegistrationInline, TagInline]
+    inlines = [RegistrationInline]
     list_display = (
         "username",
         "first_name",
@@ -107,12 +100,14 @@ class NotificationsAdmin(admin.ModelAdmin):
         "is_telegram",
         "is_phone",
         "is_push",
+        "user",
     )
     list_editable = (
         "is_email",
         "is_telegram",
         "is_phone",
         "is_push",
+        "user"
     )
     ordering = ("id",)
     list_per_page = LIMIT_POSTS_PER_PAGE

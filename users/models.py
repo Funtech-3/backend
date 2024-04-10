@@ -1,11 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .constants import (
-    MAX_LENGTH_EMAIL,
-    MAX_LENGTH_STRING_FOR_USER,
-    MAX_PHONE_NUMBER_LENGTH,
-)
+from .constants import (MAX_LENGTH_EMAIL, MAX_LENGTH_STRING_FOR_USER,
+                        MAX_PHONE_NUMBER_LENGTH)
 from .validators import validate_mobile, validate_telegram
 
 

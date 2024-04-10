@@ -28,7 +28,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "position",
             "work_place",
             "tags",
-            "notifications",
             "avatar",
             "full_name",
         )
@@ -65,9 +64,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "work_place", instance.work_place
         )
         instance.tags = validated_data.get("tags", instance.tags)
-        instance.notifications = validated_data.get(
-            "notifications", instance.notifications
-        )
         default_avatar_id = validated_data.get("default_avata_id")
         if default_avatar_id:
             avatar_url = (

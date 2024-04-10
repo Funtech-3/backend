@@ -26,7 +26,7 @@ class CustomUserViewSet(viewsets.ViewSet):
         """Метод создания или получения юзера."""
         yandex_id = request.data.get("id")
         if yandex_id:
-            user = User.objects.get(yandex_id=yandex_id)
+            user = User.objects.filter(yandex_id=yandex_id).first()
             if user:
                 serializer = self.serializer_class(user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
