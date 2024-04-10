@@ -35,9 +35,9 @@ class CustomUserViewSet(viewsets.ViewSet):
             phone_number = request.data.get("defaulte_phone", {}).get(
                 "number", None
             )
-            default_avatar_id = request.data.get("default_avatar_id")
+            default_avatar_id = request.data.get("default_avatar_id", None)
             avatar_url = (
-                "https://avatars.yandex.net/get-yapic/{default_avatar_id}/"
+                f"https://avatars.yandex.net/get-yapic/{default_avatar_id}/"
             )
             user = User(
                 yandex_id=yandex_id,
