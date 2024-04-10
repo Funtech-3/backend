@@ -61,7 +61,7 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = LIMIT_POSTS_PER_PAGE
 
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "yandex_id")}),
         (
             "Персональные данные",
             {
@@ -100,12 +100,14 @@ class NotificationsAdmin(admin.ModelAdmin):
         "is_telegram",
         "is_phone",
         "is_push",
+        "user",
     )
     list_editable = (
         "is_email",
         "is_telegram",
         "is_phone",
         "is_push",
+        "user"
     )
     ordering = ("id",)
     list_per_page = LIMIT_POSTS_PER_PAGE

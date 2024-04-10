@@ -21,12 +21,12 @@ class Registration(models.Model):
         REJECTED = "REJECTED", _("Заявка отклонена")
         CONFIRMED = "CONFIRMED", _("Вы участвуете")
 
-    event = models.ForeignKey(
+    event = models.OneToOneField(
         to=Event,
         on_delete=models.CASCADE,
         verbose_name="Событие",
     )
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         to=User,
         on_delete=models.CASCADE,
         verbose_name="Участник",
