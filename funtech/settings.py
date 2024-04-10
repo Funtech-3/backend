@@ -1,6 +1,7 @@
 """Основные настройки проекта."""
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
@@ -29,7 +30,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "djoser",
     "django_filters",
     "drf_spectacular",
@@ -132,26 +133,12 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.AllowAny",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-}
-
-DJOSER = {
-    "LOGIN_FIELD": "username",
-    "HIDE_USERS": False,
-    "PERMISSIONS": {
-        "user": [
-            "rest_framework.permissions.AllowAny",
-        ],
-        "user_list": [
-            "rest_framework.permissions.AllowAny",
-        ],
-    },
-    "SERIALIZERS": {},
 }
 
 SPECTACULAR_SETTINGS = {
@@ -163,6 +150,11 @@ SPECTACULAR_SETTINGS = {
         "filter": True,
     },
     "COMPONENT_SPLIT_REQUEST": True,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 CORS_ALLOWED_ORIGINS = [

@@ -3,12 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import Tag
-from .constants import (
-    MAX_CHAR_FOR_EVENTS,
-    MAX_EVENT_MODE,
-    MAX_EVENT_REG_STATUS,
-    MAX_LONG_CHAR_FOR_EVENTS
-)
+from .constants import (MAX_CHAR_FOR_EVENTS, MAX_EVENT_MODE,
+                        MAX_EVENT_REG_STATUS, MAX_LONG_CHAR_FOR_EVENTS)
 
 User = get_user_model()
 
@@ -64,9 +60,7 @@ class Speaker(models.Model):
         max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     image = models.ImageField(
-        verbose_name="Фото",
-        upload_to="events/images/speakers",
-        blank=True
+        verbose_name="Фото", upload_to="events/images/", blank=True
     )
 
     class Meta:
@@ -135,13 +129,13 @@ class Event(models.Model):
     )
     preview_image = models.ImageField(
         verbose_name="Превью-фото события",
-        upload_to="events/images/event/preview",
+        upload_to="events/images/",
         blank=True,
-        null=True
+        null=True,
     )
     image = models.ImageField(
         verbose_name="Фото для страницы события",
-        upload_to="events/images/event/detail",
+        upload_to="events/images/",
     )
     favorited_by = models.ManyToManyField(
         to=User,

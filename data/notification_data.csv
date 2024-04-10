@@ -1,0 +1,3 @@
+id(int)(primarykey);is_notification(bool);is_email(bool);is_telegram(bool);is_phone(bool);Is_push(bool);user_id(int)
+1;True;False;True;True;False;1
+2;False;False;False;False;False;2
