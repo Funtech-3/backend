@@ -25,6 +25,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "work_place",
             "tags",
             "avatar",
+            "cities",
             "full_name",
         )
         read_only_fields = ("id",)
@@ -52,6 +53,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "work_place", instance.work_place
         )
         instance.tags = validated_data.get("tags", instance.tags)
+        instance.cities = validated_data.get("cities", instance.cities)
         instance.save()
         return instance
 

@@ -1,4 +1,4 @@
-id(int),first_name(str),last_name(str),work_place(str),position(str),iamge(str)
+id,first_name,last_name,work_place,position,iamge
 1,Андрей,Пронин,ПронинТим,CEO,
 2,Тимофей,Хирьянов,МФТИ,Преподователь,
 3,Senior,Pomidor,django_work,TeamLead,
