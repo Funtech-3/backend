@@ -1,7 +1,12 @@
 from django_filters import rest_framework as filters
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+
 
 from .filters import EventFilter
 from .models import City, Event
@@ -10,6 +15,7 @@ from .serializers import (
     EventPreviewSerializer,
     EventDetailSerializer
 )
+from tickets.models import Registration
 
 
 class EventViewSet(ReadOnlyModelViewSet):
@@ -28,6 +34,24 @@ class EventViewSet(ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return EventDetailSerializer
         return EventPreviewSerializer
+    
+    @action(
+        detail=False,
+        methods=['POST',],
+        url_path=r'(?P<slug>[\w-]+)/registration',
+        permission_classes=[IsAuthenticated,],
+    )
+    def registration(self):
+        """Зарегистрироваться на событие."""
+        event = Event.objects.get(slug=self.kwargs.get('slug'))
+        object, created = Registration.objects.get_or_create(
+            user=self.request.user,
+            event=event
+        )
+        if object or created:
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class CityListView(ListAPIView):
