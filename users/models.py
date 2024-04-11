@@ -65,10 +65,14 @@ class CustomUser(AbstractUser):
     username = models.CharField(
         verbose_name="Логин из яндекс",
         max_length=MAX_LENGTH_STRING_FOR_USER,
+        blank=True,
+        null=True,
     )
     email = models.EmailField(
         verbose_name="Адрес электронной почты",
         max_length=MAX_LENGTH_EMAIL,
+        blank=True,
+        null=True,
     )
     phone_number = models.CharField(
         verbose_name="Номер телефона",
