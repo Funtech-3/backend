@@ -1,4 +1,5 @@
 from django_filters import rest_framework as filters
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
@@ -13,7 +14,7 @@ from .models import City, Event
 from .serializers import (
     CityReadSerializer,
     EventPreviewSerializer,
-    EventDetailSerializer
+    EventDetailSerializer,
 )
 from tickets.models import Registration
 
@@ -34,24 +35,29 @@ class EventViewSet(ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return EventDetailSerializer
         return EventPreviewSerializer
-    
+
     @action(
         detail=False,
-        methods=['POST',],
+        methods=[
+            'POST',
+        ],
         url_path=r'(?P<slug>[\w-]+)/registration',
-        permission_classes=[IsAuthenticated,],
+        permission_classes=[
+            IsAuthenticated,
+        ],
     )
     def registration(self, request, **kwargs):
         """Зарегистрироваться на событие."""
-        event = Event.objects.get(slug=self.kwargs.get('slug'))
+        try:
+            event = Event.objects.get(slug=self.kwargs.get('slug'))
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         object, created = Registration.objects.get_or_create(
-            user=self.request.user,
-            event=event
+            user=self.request.user, event=event
         )
         if object:
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-        
 
 
 class CityListView(ListAPIView):
