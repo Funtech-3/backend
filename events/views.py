@@ -1,3 +1,5 @@
+from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -13,7 +15,9 @@ from .serializers import (
 class EventViewSet(ReadOnlyModelViewSet):
     """Получение списка событий и конкретного события."""
     lookup_field = 'slug'
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter)
     filterset_class = EventFilter
+    search_fields = ['title', 'description', 'type__title']
 
     def get_queryset(self):
         if self.action == 'retrieve':

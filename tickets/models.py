@@ -2,6 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 from events.models import Event
@@ -21,12 +22,12 @@ class Registration(models.Model):
         REJECTED = "REJECTED", _("Заявка отклонена")
         CONFIRMED = "CONFIRMED", _("Вы участвуете")
 
-    event = models.OneToOneField(
+    event = models.ForeignKey(
         to=Event,
         on_delete=models.CASCADE,
         verbose_name="Событие",
     )
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         verbose_name="Участник",
@@ -55,6 +56,16 @@ class Registration(models.Model):
         verbose_name = "Регистрация"
         verbose_name_plural = "регистрации"
         default_related_name = "ticket_registrations"
+
+        constraints = [
+            UniqueConstraint(
+                fields=[
+                    'user',
+                    'event',
+                ],
+                name='Unique_event_for_each_user'
+            )
+        ]
 
     def ___str__(self):
         """Строковое представление модели Регистрация."""

@@ -20,12 +20,14 @@ class CityReadSerializer(serializers.ModelSerializer):
 
 class SpeakerReadSerializer(serializers.ModelSerializer):
     """Сериализатор спикера."""
+    speaker_id = serializers.CharField(source='id', read_only=True)
+    speaker_name = serializers.CharField(source='full_name', read_only=True)
 
     class Meta:
         model = Speaker
         fields = (
-            'id',
-            'full_name',
+            'speaker_id',
+            'speaker_name',
             'work_place',
             'position',
             'image'
@@ -58,6 +60,7 @@ class EventPreviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='name'
     )
+    # Жду сериализатор из приложения users, пока возвращается только список id:
     # tags = TagSerializer(
     #     many=True,
     #     read_only=True
