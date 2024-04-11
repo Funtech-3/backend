@@ -9,7 +9,7 @@ from tickets.views import UserTicketViewSet, EventRegistrationVieSet
 router_v1 = routers.DefaultRouter()
 router_v1.register("user/ticket", UserTicketViewSet, basename="ticket")
 router_v1.register(r'events', EventViewSet, basename='event')
-router_v1.register("ticket", EventRegistrationVieSet, basename="ticket")
+# router_v1.register("ticket", EventRegistrationVieSet, basename="ticket")
 router_v1.register("user", CustomUserViewSet, basename="user")
 
 urlpatterns = [
