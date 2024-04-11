@@ -1,6 +1,5 @@
 """Модуль сериализаторов для приложения Tickets."""
 
-
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -29,4 +28,4 @@ class UserTicketDestroySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Registration
-        fields = ('id')
+        fields = 'id'
