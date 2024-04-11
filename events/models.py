@@ -125,7 +125,8 @@ class Event(models.Model):
         to=EventType,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name="Тип события"
     )
     preview_image = models.ImageField(
         verbose_name="Превью-фото события",
