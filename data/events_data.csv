@@ -4,5 +4,5 @@ id,title,description,slug,city_id,address,date,registration_status,tags_id,mode,
 3,,,event-slug-3,6,Космонавтов 36,2024-04-12,CLOSED,1,OFFLINE,1,"
 https://static.tildacdn.com/tild3236-6165-4262-b565-373866613339/Group_2087327904.png","
 https://avatars.mds.yandex.net/get-events/1522412/2a0000018ea438f1886a7af4f070ac757e83/286x137x2",1
-4,,,event-slug-4,4,Интситутская 4/1,2024-04-28,PENDIND,1,OFFLINE,2,"
+4,,,event-slug-4,4,Интситутская 4/1,2024-04-28,PENDING,1,OFFLINE,2,"
 https://avatars.mds.yandex.net/get-events/1651727/2a0000018e8410b18e212fad3d8a763064ec/286x137x2",https://avatars.mds.yandex.net/get-lpc/12373972/f1b832b2-8234-474e-9624-6d0d150e8f94/width_2560_q70,2
