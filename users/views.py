@@ -19,8 +19,21 @@ class CustomUserViewSet(viewsets.ViewSet):
 
         user = get_object_or_404(User, yandex_id=pk)
         serializer = self.serializer_class(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        # Cкорее всего никогда использоватсья не будет.
+        refresh_token = RefreshToken.for_user(user)
+        access_token = str(refresh_token.access_token)
+        response_data = {
+            "access_token": access_token,
+            "refresh_token": str(refresh_token),
+            "user": serializer.data,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    # def retrieve(self, request, pk=None):
+    #     """Безопасный метод получения информации о юзере."""
+
+    #     user = get_object_or_404(User, yandex_id=pk)
+    #     serializer = self.serializer_class(user)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    #     # Cкорее всего никогда использоватсья не будет.
 
     def create(self, request):
         """Метод создания или получения юзера."""
