@@ -1,4 +1,4 @@
-id(int)(primarykey),event_id(int),user_id(int),status(str),date_create(str),ticket_code(str)
+id,event_id,user_id,status,date_create,ticket_code
 1,1,1,REJECTED,2024-03-26,ABC123ABC123ABC123ABC123ABC123ABC123
 2,3,1,CONFIRMED,2024-03-27,CDV$@#CDV$@#CDV$@#CDV$@#CDV$@#CDV$@#
 3,1,2,CONFIRMED,2024-04-09,DSD@@SDSD@@SDSD@@SDSD@@SDSD@@SDSD@@S

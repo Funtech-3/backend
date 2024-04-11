@@ -9,6 +9,23 @@ from .constants import (
 from .validators import validate_mobile, validate_telegram
 
 
+class City(models.Model):
+    """Модель городов."""
+
+    name = models.CharField(
+        verbose_name="Название города",
+        max_length=MAX_LENGTH_STRING_FOR_USER,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = "Город"
+        verbose_name_plural = "Города"
+
+    def __str__(self):
+        return self.name
+
+
 class Tag(models.Model):
     """Модель тегов."""
 
@@ -91,6 +108,12 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True,
         default="https://avatars.yandex.net/get-yapic/<default_avatar_id>/",
+    )
+    cities = models.ManyToManyField(
+        verbose_name="Интересующие города",
+        to=City,
+        blank=True,
+        related_name="users",
     )
 
     class Meta:

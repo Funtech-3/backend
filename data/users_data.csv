@@ -1,4 +1,4 @@
-id(int)(primarykey),yandex_id(int),first_name(str),last_name(str),username(str),email(str),phone_number(str),telegram_username(str),position(str),work_place(str),tags_id(int),avatar(str)
-1,1312321,null,null,eventuser,events@yandex.ru,null,null,"null ",null,"[ 2, 3, 4, 10, 6]",https://avatars.yandex.net/get-yapic/<default_avatar_id>/
-2,1439239,Михаил,Михеев,miha142,michail@yandex.ru,+79993334422,@michailo,Frontend разработчик,ЯндексДеливери,"[ 1, 2, 3, 5, 8]",https://avatars.yandex.net/get-yapic/182838284/
-3,1231233,Светлана,Прохорова,sveta_morgan,sveta_ne@yandex.ru,+79319318213,@sveta_morgan,DevOps,Selectel,"[1, 4, 7, 11]",https://avatars.yandex.net/get-yapic/123131232/
+id,yandex_id,first_name,last_name,username,email,phone_number,telegram_username,position,work_place,tags_id,avatar,cities_id
+1,1312321,null,null,eventuser,events@yandex.ru,null,null,"null ",null,5,https://avatars.yandex.net/get-yapic/<default_avatar_id>/,3
+2,1439239,Михаил,Михеев,miha142,michail@yandex.ru,+79993334422,@michailo,Frontend разработчик,ЯндексДеливери,5,https://avatars.yandex.net/get-yapic/182838284/,1
+3,1231233,Светлана,Прохорова,sveta_morgan,sveta_ne@yandex.ru,+79319318213,@sveta_morgan,DevOps,Selectel,4,https://avatars.yandex.net/get-yapic/123131232/,4

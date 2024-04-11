@@ -1,28 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from users.models import Tag
-from .constants import (MAX_CHAR_FOR_EVENTS, MAX_EVENT_MODE,
-                        MAX_EVENT_REG_STATUS, MAX_LONG_CHAR_FOR_EVENTS)
+
+from .constants import (
+    MAX_CHAR_FOR_EVENTS,
+    MAX_EVENT_MODE,
+    MAX_EVENT_REG_STATUS,
+    MAX_LONG_CHAR_FOR_EVENTS,
+)
 
 User = get_user_model()
-
-
-class City(models.Model):
-    """Модель городов."""
-    name = models.CharField(
-        verbose_name="Название города",
-        max_length=MAX_CHAR_FOR_EVENTS,
-        unique=True
-    )
-
-    class Meta:
-        verbose_name = "Город"
-        verbose_name_plural = "города"
-
-    def __str__(self):
-        return self.name
 
 
 class EventType(models.Model):

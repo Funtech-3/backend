@@ -1,4 +1,4 @@
-id(int)(primarykey),title(str)
+id,title
 1,Программирование
 2,IT-Архитектура
 3,Аналитика
