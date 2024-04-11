@@ -1,23 +1,16 @@
 """Модуль административной команды загрузки тестовых данных."""
 
-import os
 import datetime
+import os
 from csv import DictReader
 from random import randint
-from django.contrib.auth import get_user_model
 
+from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.db.utils import IntegrityError
 
-from events.models import (
-    Speaker,
-    City,
-    Tag,
-    EventType,
-    Event,
-    EventStep,
-)
+from events.models import City, Event, EventStep, EventType, Speaker, Tag
 from tickets.models import Registration
 from users.models import NotificationSwitch
 
@@ -126,7 +119,9 @@ class Command(BaseCommand):
             )
             self.stdout.write(
                 self.style.SUCCESS(
-                    f'{os.path.join(SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter))} {MESSAGE}'
+                    f'{os.path.join(
+                        SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter)
+                    )} {MESSAGE}'
                 )
             )
         self.stdout.write(self.style.SUCCESS(f'{SPEAKER_CSV} {MESSAGE}'))
@@ -145,7 +140,9 @@ class Command(BaseCommand):
             object.avatar.save(USER_IMAGES.get(counter), image_file, save=True)
             self.stdout.write(
                 self.style.SUCCESS(
-                    f'{os.path.join(USER_IMAGE_PATH, USER_IMAGES.get(counter))} {MESSAGE}'
+                    f'{os.path.join(
+                        USER_IMAGE_PATH, USER_IMAGES.get(counter)
+                    )} {MESSAGE}'
                 )
             )
         self.stdout.write(self.style.SUCCESS(f'{USERS_CSV} {MESSAGE}'))
@@ -213,7 +210,9 @@ class Command(BaseCommand):
             )
             self.stdout.write(
                 self.style.SUCCESS(
-                    f'{os.path.join(EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter))} {MESSAGE}'
+                    f'{os.path.join(
+                        EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter)
+                    )} {MESSAGE}'
                 )
             )
 
@@ -227,7 +226,9 @@ class Command(BaseCommand):
             )
             self.stdout.write(
                 self.style.SUCCESS(
-                    f'{os.path.join(EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter))} {MESSAGE}'
+                    f'{os.path.join(
+                        EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter)
+                    )} {MESSAGE}'
                 )
             )
             event_object.save()
