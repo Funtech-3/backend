@@ -1,0 +1,4 @@
+is_notification,is_email,is_telegram,is_phone,is_push,user_id
+True,False,True,True,False,2
+False,False,False,False,False,3
+True,False,True,False,True,4
