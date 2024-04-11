@@ -41,14 +41,14 @@ class EventViewSet(ReadOnlyModelViewSet):
         url_path=r'(?P<slug>[\w-]+)/registration',
         permission_classes=[IsAuthenticated,],
     )
-    def registration(self):
+    def registration(self, request, **kwargs):
         """Зарегистрироваться на событие."""
         event = Event.objects.get(slug=self.kwargs.get('slug'))
         object, created = Registration.objects.get_or_create(
             user=self.request.user,
             event=event
         )
-        if object or created:
+        if object:
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
         

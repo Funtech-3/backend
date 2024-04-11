@@ -18,9 +18,10 @@ User = get_user_model()
 
 
 class UserTicketViewSet(RetrieveDestroyViewSet):
-    """Вьюсет для Билетов."""
+    """Вьюсет для чтения и удаления Билетов."""
 
-    queryset = Registration.objects.filter(status=Registration.Status.CONFIRMED).all()
+    queryset = Registration.objects.filter(
+        status=Registration.Status.CONFIRMED).all()
     serializer_class = UserTicketReadSerializer
     permission_classes = [IsAuthenticated, IsOwner,]
 
@@ -33,9 +34,4 @@ class UserTicketViewSet(RetrieveDestroyViewSet):
         elif self.request.method == 'DELETE':
             return UserTicketDestroySerializer
         return UserTicketDestroySerializer
-    
 
-class EventRegistrationVieSet(CreateRetrieveViewSet):
-    """Вьюсет регистрации билета."""
-    permission_classes = [IsAuthenticated, IsOwner,]
-    pass
