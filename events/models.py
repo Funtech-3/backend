@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from users.models import Tag
+from users.models import Tag, City
 
 from .constants import (
     MAX_CHAR_FOR_EVENTS,
