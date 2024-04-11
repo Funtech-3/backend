@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from users.models import Tag, City
 
 from .constants import (
@@ -99,6 +100,7 @@ class Event(models.Model):
         verbose_name="Статус регистрации",
         max_length=MAX_EVENT_REG_STATUS,
         choices=RegistrationStatus.choices,
+        default=RegistrationStatus.PENDING
     )
     tags = models.ManyToManyField(
         to=Tag,
@@ -107,7 +109,8 @@ class Event(models.Model):
     mode = models.CharField(
         verbose_name="Формат проведения",
         max_length=MAX_EVENT_MODE,
-        choices=EventMode.choices
+        choices=EventMode.choices,
+        default=EventMode.OFFLINE
     )
     type = models.ForeignKey(
         to=EventType,
