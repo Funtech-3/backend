@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from tickets.models import Registration
 from tickets.serializers import UserTicketReadSerializer, UserTicketDestroySerializer
 from tickets.mixins import RetrieveDestroyViewSet, CreateRetrieveViewSet
+from tickets.permissions import IsOwner
 
 User = get_user_model()
 
@@ -21,6 +22,7 @@ class UserTicketViewSet(RetrieveDestroyViewSet):
 
     queryset = Registration.objects.filter(status=Registration.Status.CONFIRMED).all()
     serializer_class = UserTicketReadSerializer
+    permission_classes = [IsAuthenticated, IsOwner,]
 
 
     def get_serializer_class(self):
@@ -35,4 +37,5 @@ class UserTicketViewSet(RetrieveDestroyViewSet):
 
 class EventRegistrationVieSet(CreateRetrieveViewSet):
     """Вьюсет регистрации билета."""
+    permission_classes = [IsAuthenticated, IsOwner,]
     pass
