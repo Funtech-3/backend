@@ -3,11 +3,11 @@
 from rest_framework import mixins, viewsets
 
 
-class RetrieveDestroyViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
+class RetrieveUpdateViewSet(
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    """Вьюсет на чтение, удаление."""
+    """Вьюсет на чтение, обновление."""
 
     pass

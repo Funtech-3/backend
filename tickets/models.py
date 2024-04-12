@@ -6,6 +6,7 @@ from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 from events.models import Event
+
 from .constants import STATUS_MAX_LENGTH, TICKET_CODE_LENGTH
 from .utils import get_uuid_str
 
@@ -62,10 +63,10 @@ class Registration(models.Model):
         constraints = [
             UniqueConstraint(
                 fields=[
-                    'user',
-                    'event',
+                    "user",
+                    "event",
                 ],
-                name='Unique_event_for_each_user',
+                name="Unique_event_for_each_user",
             )
         ]
 

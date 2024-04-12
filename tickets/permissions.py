@@ -1,8 +1,7 @@
 """Модуль разрешений для представлений приложения Api."""
 
-from rest_framework.permissions import BasePermission
 from django.contrib.auth import get_user_model
-
+from rest_framework.permissions import BasePermission
 
 User = get_user_model()
 

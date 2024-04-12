@@ -3,18 +3,17 @@
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
-from tickets.models import Registration
-from tickets.serializers import (
-    UserTicketReadSerializer,
-)
 from tickets.mixins import RetrieveDestroyViewSet
+from tickets.models import Registration
 from tickets.permissions import IsOwner
+from tickets.serializers import UserTicketReadSerializer
 
 User = get_user_model()
 
 
 class UserTicketViewSet(RetrieveDestroyViewSet):
     """Вьюсет для чтения и удаления Билетов."""
+
     queryset = Registration.objects.filter(
         status=Registration.Status.CONFIRMED
     ).all()

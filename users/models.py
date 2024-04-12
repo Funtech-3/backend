@@ -45,6 +45,7 @@ class Tag(models.Model):
 
 class CustomUser(AbstractUser):
     """Модель пользователя для приложения."""
+
     USERNAME_FIELD = "yandex_id"
     yandex_id = models.PositiveBigIntegerField(
         verbose_name="Связанный Яндекс ID",
