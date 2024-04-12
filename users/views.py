@@ -35,7 +35,6 @@ class CustomUserViewSet(viewsets.ViewSet):
             "user": serializer.data,
         }
         return Response(response_data, status=status.HTTP_200_OK)
-        # Cкорее всего никогда использоватсья не будет.
 
     def create(self, request):
         """Метод создания или получения юзера."""

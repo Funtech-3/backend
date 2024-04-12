@@ -8,7 +8,6 @@ from .models import Registration
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     """Настройка отображения для модели Registration."""
-
     list_display = (
         'event',
         'user',
@@ -17,6 +16,7 @@ class RegistrationAdmin(admin.ModelAdmin):
         'ticket_code_verbose',
         'ticket_id_verbose',
     )
+    list_editable = ('status',)
 
     @admin.display(description="Код билета")
     def ticket_code_verbose(self, object: Registration):

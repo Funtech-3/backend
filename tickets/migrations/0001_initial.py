@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Registration',
+            name="Registration",
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('ticket_code', models.CharField(auto_created=True, default=tickets.utils.get_uuid_str, help_text='Уникальный код для кодирования данных о билете в QR-код.', max_length=36, unique=True, verbose_name='Уникальный код')),
@@ -24,9 +24,9 @@ class Migration(migrations.Migration):
                 ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.event', verbose_name='Событие')),
             ],
             options={
-                'verbose_name': 'Регистрация',
-                'verbose_name_plural': 'регистрации',
-                'default_related_name': 'ticket_registrations',
+                "verbose_name": "Регистрация",
+                "verbose_name_plural": "регистрации",
+                "default_related_name": "ticket_registrations",
             },
         ),
     ]

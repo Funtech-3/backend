@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
+
     dependencies = [
     ]
 
@@ -26,14 +27,12 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(upload_to='events/images/', verbose_name='Фото для страницы события')),
             ],
             options={
-                'verbose_name': 'Событие',
-                'verbose_name_plural': 'события',
-                'ordering': ('-date', 'title'),
-                'default_related_name': 'events',
+                "verbose_name": "Тип события",
+                "verbose_name_plural": "типы событий",
             },
         ),
         migrations.CreateModel(
-            name='EventStep',
+            name="Speaker",
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=256, verbose_name='Название')),
@@ -41,10 +40,8 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, verbose_name='Описание')),
             ],
             options={
-                'verbose_name': 'Этап события',
-                'verbose_name_plural': 'этапы события',
-                'ordering': ('start_time',),
-                'default_related_name': 'steps',
+                "verbose_name": "Спикер",
+                "verbose_name_plural": "спикеры",
             },
         ),
         migrations.CreateModel(
