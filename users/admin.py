@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 
 from tickets.models import Registration
+
 from .constants import LIMIT_POSTS_PER_PAGE
 from .models import City, NotificationSwitch, Tag
 
@@ -102,13 +103,7 @@ class NotificationsAdmin(admin.ModelAdmin):
         "is_push",
         "user",
     )
-    list_editable = (
-        "is_email",
-        "is_telegram",
-        "is_phone",
-        "is_push",
-        "user"
-    )
+    list_editable = ("is_email", "is_telegram", "is_phone", "is_push", "user")
     ordering = ("id",)
     list_per_page = LIMIT_POSTS_PER_PAGE
 

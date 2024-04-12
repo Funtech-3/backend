@@ -3,18 +3,24 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import City, Tag
-from .constants import (MAX_CHAR_FOR_EVENTS, MAX_EVENT_MODE,
-                        MAX_EVENT_REG_STATUS, MAX_LONG_CHAR_FOR_EVENTS)
+
+from .constants import (
+    MAX_CHAR_FOR_EVENTS,
+    MAX_EVENT_MODE,
+    MAX_EVENT_REG_STATUS,
+    MAX_LONG_CHAR_FOR_EVENTS,
+)
 
 User = get_user_model()
 
 
 class EventType(models.Model):
     """Модель типов событий."""
+
     title = models.CharField(
         verbose_name="Название типа",
         max_length=MAX_CHAR_FOR_EVENTS,
-        unique=True
+        unique=True,
     )
 
     class Meta:
@@ -27,21 +33,18 @@ class EventType(models.Model):
 
 class Speaker(models.Model):
     """Модель спикеров."""
+
     first_name = models.CharField(
-        verbose_name="Имя",
-        max_length=MAX_CHAR_FOR_EVENTS
+        verbose_name="Имя", max_length=MAX_CHAR_FOR_EVENTS
     )
     last_name = models.CharField(
-        verbose_name="Фамилия",
-        max_length=MAX_CHAR_FOR_EVENTS
+        verbose_name="Фамилия", max_length=MAX_CHAR_FOR_EVENTS
     )
     work_place = models.CharField(
-        verbose_name="Место работы",
-        max_length=MAX_LONG_CHAR_FOR_EVENTS
+        verbose_name="Место работы", max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     position = models.CharField(
-        verbose_name="Должность",
-        max_length=MAX_LONG_CHAR_FOR_EVENTS
+        verbose_name="Должность", max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     image = models.ImageField(
         verbose_name="Фото", upload_to="events/images/", blank=True
@@ -72,47 +75,42 @@ class Event(models.Model):
         OFFLINE = "OFFLINE", _("Офлайн")
 
     title = models.CharField(
-        verbose_name="Название",
-        max_length=MAX_CHAR_FOR_EVENTS
+        verbose_name="Название", max_length=MAX_CHAR_FOR_EVENTS
     )
     description = models.TextField(verbose_name="Описание")
     slug = models.CharField(
         verbose_name="Символьный код",
         max_length=MAX_CHAR_FOR_EVENTS,
-        unique=True
+        unique=True,
     )
     city = models.ForeignKey(
         to=City,
         on_delete=models.PROTECT,
-        verbose_name="Город проведения"
+        verbose_name="Город проведения",
     )
     address = models.CharField(
-        verbose_name="Адрес",
-        max_length=MAX_CHAR_FOR_EVENTS
+        verbose_name="Адрес", max_length=MAX_CHAR_FOR_EVENTS
     )
     date = models.DateField(verbose_name="Дата проведения", null=True)
     registration_status = models.CharField(
         verbose_name="Статус регистрации",
         max_length=MAX_EVENT_REG_STATUS,
         choices=RegistrationStatus.choices,
-        default=RegistrationStatus.PENDING
+        default=RegistrationStatus.PENDING,
     )
-    tags = models.ManyToManyField(
-        to=Tag,
-        verbose_name="Теги"
-    )
+    tags = models.ManyToManyField(to=Tag, verbose_name="Теги")
     mode = models.CharField(
         verbose_name="Формат проведения",
         max_length=MAX_EVENT_MODE,
         choices=EventMode.choices,
-        default=EventMode.OFFLINE
+        default=EventMode.OFFLINE,
     )
     type = models.ForeignKey(
         to=EventType,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Тип события"
+        verbose_name="Тип события",
     )
     preview_image = models.ImageField(
         verbose_name="Превью-фото события",
@@ -128,7 +126,7 @@ class Event(models.Model):
         to=User,
         blank=True,
         related_name="favorite_events",
-        verbose_name="Добавили в избранное"
+        verbose_name="Добавили в избранное",
     )
 
     class Meta:
@@ -143,9 +141,9 @@ class Event(models.Model):
 
 class EventStep(models.Model):
     """Модель этапов события."""
+
     title = models.CharField(
-        verbose_name="Название",
-        max_length=MAX_LONG_CHAR_FOR_EVENTS
+        verbose_name="Название", max_length=MAX_LONG_CHAR_FOR_EVENTS
     )
     start_time = models.TimeField(verbose_name="Начало этапа")
     description = models.TextField(verbose_name="Описание", blank=True)
@@ -155,16 +153,14 @@ class EventStep(models.Model):
         verbose_name="Спикеры",
     )
     event = models.ForeignKey(
-        to=Event,
-        on_delete=models.CASCADE,
-        verbose_name="Событие"
+        to=Event, on_delete=models.CASCADE, verbose_name="Событие"
     )
 
     class Meta:
         verbose_name = "Этап события"
         verbose_name_plural = "этапы события"
         default_related_name = "steps"
-        ordering = ('start_time',)
+        ordering = ("start_time",)
 
     def __str__(self):
         return self.title

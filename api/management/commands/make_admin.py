@@ -9,19 +9,19 @@ from django.db.utils import IntegrityError
 User = get_user_model()
 
 ADMIN = {
-    'yandex_id': 321,
-    'username': 'admin',
-    'email': 'admin@fake.up',
-    'telegram_username': '@fake_admin_up',
-    'last_name': 'Pushkin',
-    'first_name': "Aleksander",
-    'phone_number': '+79001112233',
-    'position': 'Администратор',
-    'work_place': 'Umbrella corp.',
-    'is_staff': True,
-    'is_superuser': True,
+    "yandex_id": 321,
+    "username": "admin",
+    "email": "admin@fake.up",
+    "telegram_username": "@fake_admin_up",
+    "last_name": "Pushkin",
+    "first_name": "Aleksander",
+    "phone_number": "+79001112233",
+    "position": "Администратор",
+    "work_place": "Umbrella corp.",
+    "is_staff": True,
+    "is_superuser": True,
 }
-PASSWORD = os.getenv('ADMIN_PASSWORD', '12345')
+PASSWORD = os.getenv("ADMIN_PASSWORD", "12345")
 
 
 class Command(BaseCommand):
@@ -29,7 +29,7 @@ class Command(BaseCommand):
     с предустановленными параметрами.
     """
 
-    help = 'Создает суперпользователя с предустановленными параметрами.'
+    help = "Создает суперпользователя с предустановленными параметрами."
 
     def make_admin(self):
         """Создать админа."""
@@ -39,12 +39,12 @@ class Command(BaseCommand):
         if user and created and PASSWORD:
             user.set_password(PASSWORD)
             user.save()
-            self.stdout.write(self.style.SUCCESS('Суперпользователь создан.'))
+            self.stdout.write(self.style.SUCCESS("Суперпользователь создан."))
         else:
             self.stdout.write(
                 self.style.ERROR(
-                    'При создании суперпользователя возникли ошибки. '
-                    'Пароль не установлен.'
+                    "При создании суперпользователя возникли ошибки. "
+                    "Пароль не установлен."
                 )
             )
 
@@ -54,6 +54,6 @@ class Command(BaseCommand):
         try:
             self.make_admin()
         except IntegrityError as err:
-            self.stdout.write(self.style.ERROR(f'ERROR - {err}'))
+            self.stdout.write(self.style.ERROR(f"ERROR - {err}"))
             exit()
         exit(0)

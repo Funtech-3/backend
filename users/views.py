@@ -4,6 +4,8 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from users.mixins import RetrieveUpdateViewSet
+
 from .models import City, NotificationSwitch, Tag
 from .permissions import IsAuthenticatedAndOwner
 from .serializers import (
@@ -84,7 +86,7 @@ class CustomUserViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class NotificationsViewSet(viewsets.ModelViewSet):
+class NotificationsViewSet(RetrieveUpdateViewSet):
     """Представление для уведомлений в личном кабинете юзера."""
 
     queryset = NotificationSwitch.objects.all().select_related("user")
@@ -96,7 +98,7 @@ class NotificationsViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class InterestsViewSet(viewsets.ModelViewSet):
+class InterestsViewSet(RetrieveUpdateViewSet):
     """Представление для тегов и городов в личном кабинете юзера."""
 
     serializer_class = InterestsSerializer

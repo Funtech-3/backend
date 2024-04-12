@@ -2,8 +2,11 @@ import re
 
 from django.core.exceptions import ValidationError
 
-from .constants import (NUMBER_ERROR_TEXT, REGEX_PHONE_NUMBER,
-                        REGEX_TELEGRAM_USERNAME)
+from .constants import (
+    NUMBER_ERROR_TEXT,
+    REGEX_PHONE_NUMBER,
+    REGEX_TELEGRAM_USERNAME,
+)
 
 
 def validate_mobile(number):
