@@ -39,8 +39,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     yandex_id = serializers.IntegerField()
     full_name = serializers.SerializerMethodField()
-    tags = TagsSerializer(many=True)
-    cities = CitiesSerializer(many=True)
+    tags = TagsSerializer(many=True, read_only=True)
+    cities = CitiesSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
