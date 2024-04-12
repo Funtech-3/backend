@@ -5,12 +5,13 @@ repos:
       - id: no-commit-to-branch
         args: [-b, main, -b, dev]
       - id: detect-private-key
-      - id: trailing-whitespace
+      - id: trailing-whitespace # убирает лишние пробелы
         args: [--markdown-linebreak-ext=md]
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
-      - id: check-merge-conflict
+      - id: end-of-file-fixer # добавляет пустую строку в конце файла
+      - id: check-yaml # проверяет синтаксис yml файлов
+      - id: check-added-large-files # проверяет тяжелые файлы на изменения
+      - id: check-merge-conflict # проверяет файлы, содержащие конфликтные строки слияния
+
 
   - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 24.1.1
@@ -24,18 +25,21 @@ repos:
     hooks:
       - id: isort
 
-  -   repo: https://github.com/asottile/pyupgrade
+# Обновляет синтаксис Python кода в соответствии с последними версиями
+  - repo: https://github.com/asottile/pyupgrade
     rev: v2.31.1
     hooks:
     -   id: pyupgrade
         args: [--py310-plus]
 
-  -   repo: https://github.com/pre-commit/mirrors-autopep8
+# Форматирует код под PEP8
+  - repo: https://github.com/pre-commit/mirrors-autopep8
     rev: v2.0.4
     hooks:
     -   id: autopep8
         args: [--max-line-length=79, --in-place]
 
+# Сканер стилистических ошибок, нарушающие договоренности PEP8
   - repo: https://github.com/PyCQA/flake8
     rev: 7.0.0
     hooks:
