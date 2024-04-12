@@ -1,7 +1,37 @@
+from os import name
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from .models import City, NotificationSwitch, Tag
+
 User = get_user_model()
+
+
+class TagsSerializer(serializers.Serializer):
+    """Сериализатор для тегов на главную страницу и в ЛК юзера."""
+
+    title = serializers.CharField()
+
+    class Meta:
+        model = Tag
+        fields = (
+            "id",
+            "title",
+        )
+
+
+class CitiesSerializer(serializers.Serializer):
+    """Сериализатор для городов на главную страницу и в ЛК юзера."""
+
+    name = serializers.CharField()
+
+    class Meta:
+        model = City
+        fields = (
+            "id",
+            "name",
+        )
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -9,6 +39,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     yandex_id = serializers.IntegerField()
     full_name = serializers.SerializerMethodField()
+    tags = TagsSerializer(many=True, read_only=True)
+    cities = CitiesSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -24,11 +56,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "position",
             "work_place",
             "tags",
-            "avatar",
             "cities",
+            "avatar",
             "full_name",
         )
-        read_only_fields = ("id",)
+        read_only_fields = (
+            "id",
+            "tags",
+            "cities",
+        )
 
     def create(self, validated_data):
         return User.objects.create(**validated_data)
@@ -52,10 +88,87 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.work_place = validated_data.get(
             "work_place", instance.work_place
         )
-        instance.tags = validated_data.get("tags", instance.tags)
-        instance.cities = validated_data.get("cities", instance.cities)
         instance.save()
         return instance
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}"
+
+
+class NotificationSwitchSerializer(serializers.ModelSerializer):
+    """Сериализатор переключателей уведомлений для юзера."""
+
+    yandex_id = serializers.ReadOnlyField(source="user.yandex_id")
+
+    class Meta:
+        model = NotificationSwitch
+        fields = (
+            "yandex_id",
+            "is_notification",
+            "is_email",
+            "is_telegram",
+            "is_phone",
+            "is_push",
+        )
+        read_only_fields = ("yandex_id",)
+
+    def update(self, instance, validated_data):
+        instance.is_notification = validated_data.get(
+            "is_notification", instance.is_notification
+        )
+        instance.is_email = validated_data.get("is_email", instance.is_email)
+        instance.is_telegram = validated_data.get(
+            "is_telegram", instance.is_telegram
+        )
+        instance.is_phone = validated_data.get("is_phone", instance.is_phone)
+        instance.is_push = validated_data.get("is_phone", instance.is_phone)
+        return instance
+
+
+class InterestsSerializer(serializers.Serializer):
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True
+    )
+    cities = serializers.PrimaryKeyRelatedField(
+        queryset=City.objects.all(), many=True
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "tags",
+            "cities",
+        )
+
+    def create(self, validated_data):
+        tags_data = validated_data.get("tags", [])
+        cities_data = validated_data.get("cities", [])
+        user = self.context.get("request").user
+
+        user.tags.clear()
+        user.cities.clear()
+
+        for tag in tags_data:
+            user.tags.add(tag)
+
+        for city in cities_data:
+            user.cities.add(city)
+
+        return user
+
+    def update(self, instance, validated_data):
+        tags_data = validated_data.get("tags", [])
+        cities_data = validated_data.get("cities", [])
+        instance.tags.clear()
+        instance.cities.clear()
+
+        for tags in tags_data:
+            tag = Tag.objects.get(id=tags.id)
+            instance.tags.add(tag)
+
+        for cities in cities_data:
+            city = City.objects.get(id=cities.id)
+            instance.cities.add(city)
+
+        instance.save
+        return instance

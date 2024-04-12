@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.utils.safestring import mark_safe
 
 from .constants import IMAGE_HTML
-from .models import City, Event, EventStep, EventType, Speaker, Tag
+from .models import Event, EventStep, EventType, Speaker
 
 
 class PastUpcomingFilter(SimpleListFilter):
@@ -101,5 +101,3 @@ class SpeakerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(EventType)
-admin.site.register(City)
-admin.site.register(Tag)

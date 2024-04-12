@@ -142,7 +142,8 @@ class NotificationSwitch(models.Model):
     user = models.OneToOneField(
         verbose_name="Пользователь",
         to=CustomUser,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name="user_notifications",
     )
     is_notification = models.BooleanField(
