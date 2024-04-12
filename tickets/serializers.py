@@ -1,15 +1,12 @@
 """Модуль сериализаторов для приложения Tickets."""
 
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from tickets.models import Registration
 
 
 User = get_user_model()
-
-# from users.serializers import DjoserUserSerializer
 
 
 class UserTicketReadSerializer(serializers.ModelSerializer):
@@ -21,11 +18,3 @@ class UserTicketReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = ('ticket_id', 'city', 'code', 'name', 'date_event')
-
-
-class UserTicketDestroySerializer(serializers.ModelSerializer):
-    """Сериализатор для Билетов."""
-
-    class Meta:
-        model = Registration
-        fields = 'id'

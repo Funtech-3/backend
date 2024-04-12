@@ -1,5 +1,4 @@
 from django_filters import rest_framework as filters
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
@@ -48,10 +47,7 @@ class EventViewSet(ReadOnlyModelViewSet):
     )
     def registration(self, request, **kwargs):
         """Зарегистрироваться на событие."""
-        try:
-            event = Event.objects.get(slug=self.kwargs.get('slug'))
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        event = self.get_object()
         object, created = Registration.objects.get_or_create(
             user=self.request.user, event=event
         )

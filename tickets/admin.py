@@ -8,7 +8,6 @@ from .models import Registration
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     """Настройка отображения для модели Registration."""
-
     list_display = (
         'event',
         'user',

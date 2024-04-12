@@ -10,7 +10,6 @@ from tickets.views import UserTicketViewSet
 # ticket_router = routers.DefaultRouter()
 
 
-
 # urlpatterns = [
 #     path('', include(ticket_router.urls)),
 # ]
