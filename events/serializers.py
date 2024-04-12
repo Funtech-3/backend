@@ -1,21 +1,7 @@
 from rest_framework import serializers
 
-# from users.serializers import TagSerializer
-from .models import (
-    City,
-    Event,
-    EventStep,
-    Speaker,
-)
-
-
-class CityReadSerializer(serializers.ModelSerializer):
-    """Сериализатор городов."""
-
-    class Meta:
-        model = City
-        fields = ('id', 'name')
-        read_only_fields = fields
+from users.serializers import TagsSerializer
+from .models import Event, EventStep, Speaker
 
 
 class SpeakerReadSerializer(serializers.ModelSerializer):
@@ -58,17 +44,19 @@ class EventPreviewSerializer(serializers.ModelSerializer):
     event_id = serializers.IntegerField(source='id', read_only=True)
     city = serializers.SlugRelatedField(
         read_only=True,
-        slug_field='name'
+        slug_field='name',
     )
-    # Жду сериализатор из приложения users, пока возвращается только список id:
-    # tags = TagSerializer(
-    #     many=True,
-    #     read_only=True
-    # )
-    name = serializers.CharField(source='title', read_only=True)
+    tags = TagsSerializer(
+        many=True,
+        read_only=True,
+    )
+    name = serializers.CharField(
+        source='title',
+        read_only=True,
+    )
     date_event = serializers.DateField(
         source='date',
-        read_only=True
+        read_only=True,
     )
 
     class Meta:
@@ -80,7 +68,7 @@ class EventPreviewSerializer(serializers.ModelSerializer):
             'date_event',
             'registration_status',
             'tags',
-            'preview_image'
+            'preview_image',
         )
         read_only_fields = fields
 
