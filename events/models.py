@@ -2,14 +2,9 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from users.models import Tag, City
-
-from .constants import (
-    MAX_CHAR_FOR_EVENTS,
-    MAX_EVENT_MODE,
-    MAX_EVENT_REG_STATUS,
-    MAX_LONG_CHAR_FOR_EVENTS,
-)
+from users.models import City, Tag
+from .constants import (MAX_CHAR_FOR_EVENTS, MAX_EVENT_MODE,
+                        MAX_EVENT_REG_STATUS, MAX_LONG_CHAR_FOR_EVENTS)
 
 User = get_user_model()
 

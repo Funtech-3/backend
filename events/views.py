@@ -1,15 +1,10 @@
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .filters import EventFilter
-from .models import City, Event
-from .serializers import (
-    CityReadSerializer,
-    EventPreviewSerializer,
-    EventDetailSerializer
-)
+from .models import Event
+from .serializers import EventDetailSerializer, EventPreviewSerializer
 
 
 class EventViewSet(ReadOnlyModelViewSet):
@@ -28,9 +23,3 @@ class EventViewSet(ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return EventDetailSerializer
         return EventPreviewSerializer
-
-
-class CityListView(ListAPIView):
-    """Получение списка городов."""
-    queryset = City.objects.all()
-    serializer_class = CityReadSerializer
