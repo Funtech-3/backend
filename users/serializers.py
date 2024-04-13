@@ -15,7 +15,9 @@ User = get_user_model()
 
 
 class TagsSerializer(Serializer):
-    """Сериализатор для тегов на главную страницу и в ЛК юзера."""
+    """Сериализатор для тегов на главную страницу и
+    в личном кабинете пользователя.
+    """
 
     id = PrimaryKeyRelatedField(read_only=True)
     title = CharField()
@@ -29,7 +31,9 @@ class TagsSerializer(Serializer):
 
 
 class CitiesSerializer(Serializer):
-    """Сериализатор для городов на главную страницу и в ЛК юзера."""
+    """Сериализатор для городов на главную страницу и
+    в личном кабинете пользователя.
+    """
 
     id = PrimaryKeyRelatedField(read_only=True)
     name = CharField()
@@ -43,7 +47,9 @@ class CitiesSerializer(Serializer):
 
 
 class CustomUserSerializer(ModelSerializer):
-    """Сериализатор кастомноой модели юзер, с использованием JSON ЯндексID."""
+    """Сериализатор кастомноой модели пользователя,
+    с использованием JSON ЯндексID.
+    """
 
     yandex_id = IntegerField()
     full_name = SerializerMethodField()
@@ -104,7 +110,7 @@ class CustomUserSerializer(ModelSerializer):
 
 
 class NotificationSwitchSerializer(ModelSerializer):
-    """Сериализатор переключателей уведомлений для юзера."""
+    """Сериализатор переключателей уведомлений для пользователя."""
 
     yandex_id = ReadOnlyField(source="user.yandex_id", read_only=True)
 
@@ -135,7 +141,7 @@ class NotificationSwitchSerializer(ModelSerializer):
 
 class InterestsSerializer(Serializer):
     """Сериализатор интересов пользователя,
-    показывает интересные теги и города в ЛК.
+    показывает интересные теги и города в личном кабинете.
     """
 
     tags = PrimaryKeyRelatedField(

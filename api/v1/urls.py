@@ -5,11 +5,11 @@ from rest_framework import routers
 from events.views import EventViewSet
 from tickets.views import UserTicketViewSet
 from users.views import (
-    CitiesViewSet,
+    CitiesListView,
     CustomUserViewSet,
-    InterestsViewSet,
-    NotificationsViewSet,
-    TagsViewSet,
+    TagsListView,
+    UserInterestsAPIView,
+    UserNotificationsAPIView,
 )
 
 router_v1 = routers.DefaultRouter()
@@ -20,18 +20,18 @@ router_v1.register("user", CustomUserViewSet, basename="user")
 
 urlpatterns = [
     path(
+        "user/interests/",
+        UserInterestsAPIView.as_view(),
+        name="interests",
+    ),
+    path(
         "user/notifications/",
-        NotificationsViewSet.as_view(),
+        UserNotificationsAPIView.as_view(),
         name="user-notifications",
     ),
     path("", include(router_v1.urls)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("schema/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
-    path(
-        "user/interests/",
-        InterestsViewSet.as_view(),
-        name="interests",
-    ),
-    path("tags/", TagsViewSet.as_view(), name="tags"),
-    path("cities/", CitiesViewSet.as_view(), name="cities"),
+    path("tags/", TagsListView.as_view(), name="tags"),
+    path("cities/", CitiesListView.as_view(), name="cities"),
 ]

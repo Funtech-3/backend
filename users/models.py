@@ -48,7 +48,7 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = "yandex_id"
     yandex_id = models.PositiveBigIntegerField(
-        verbose_name="Связанный Яндекс ID",
+        verbose_name="Связанный ЯндексID",
         unique=True,
     )
     first_name = models.CharField(
@@ -64,7 +64,7 @@ class CustomUser(AbstractUser):
         null=True,
     )
     username = models.CharField(
-        verbose_name="Логин из яндекс",
+        verbose_name="Логин из яндекс, свой логин",
         max_length=MAX_LENGTH_STRING_FOR_USER,
         blank=True,
         null=True,
@@ -138,7 +138,7 @@ class CustomUser(AbstractUser):
 
 
 class NotificationSwitch(models.Model):
-    """Модель найстроек уведомлений."""
+    """Модель настроек уведомлений."""
 
     user = models.OneToOneField(
         verbose_name="Пользователь",
