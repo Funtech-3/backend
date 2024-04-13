@@ -1,15 +1,26 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework.serializers import (
+    CharField,
+    IntegerField,
+    ModelSerializer,
+    PrimaryKeyRelatedField,
+    ReadOnlyField,
+    Serializer,
+    SerializerMethodField,
+)
 
 from .models import City, NotificationSwitch, Tag
 
 User = get_user_model()
 
 
-class TagsSerializer(serializers.Serializer):
-    """Сериализатор для тегов на главную страницу и в ЛК юзера."""
+class TagsSerializer(Serializer):
+    """Сериализатор для тегов на главную страницу и
+    в личном кабинете пользователя.
+    """
 
-    title = serializers.CharField()
+    id = PrimaryKeyRelatedField(read_only=True)
+    title = CharField()
 
     class Meta:
         model = Tag
@@ -19,10 +30,13 @@ class TagsSerializer(serializers.Serializer):
         )
 
 
-class CitiesSerializer(serializers.Serializer):
-    """Сериализатор для городов на главную страницу и в ЛК юзера."""
+class CitiesSerializer(Serializer):
+    """Сериализатор для городов на главную страницу и
+    в личном кабинете пользователя.
+    """
 
-    name = serializers.CharField()
+    id = PrimaryKeyRelatedField(read_only=True)
+    name = CharField()
 
     class Meta:
         model = City
@@ -32,11 +46,13 @@ class CitiesSerializer(serializers.Serializer):
         )
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
-    """Сериализатор кастомноой модели юзер, с использованием JSON ЯндексID."""
+class CustomUserSerializer(ModelSerializer):
+    """Сериализатор кастомноой модели пользователя,
+    с использованием JSON ЯндексID.
+    """
 
-    yandex_id = serializers.IntegerField()
-    full_name = serializers.SerializerMethodField()
+    yandex_id = IntegerField()
+    full_name = SerializerMethodField()
     tags = TagsSerializer(many=True, read_only=True)
     cities = CitiesSerializer(many=True, read_only=True)
 
@@ -93,10 +109,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return f"{obj.first_name} {obj.last_name}"
 
 
-class NotificationSwitchSerializer(serializers.ModelSerializer):
-    """Сериализатор переключателей уведомлений для юзера."""
+class NotificationSwitchSerializer(ModelSerializer):
+    """Сериализатор переключателей уведомлений для пользователя."""
 
-    yandex_id = serializers.ReadOnlyField(source="user.yandex_id")
+    yandex_id = ReadOnlyField(source="user.yandex_id", read_only=True)
 
     class Meta:
         model = NotificationSwitch
@@ -108,7 +124,6 @@ class NotificationSwitchSerializer(serializers.ModelSerializer):
             "is_phone",
             "is_push",
         )
-        read_only_fields = ("yandex_id",)
 
     def update(self, instance, validated_data):
         instance.is_notification = validated_data.get(
@@ -119,16 +134,23 @@ class NotificationSwitchSerializer(serializers.ModelSerializer):
             "is_telegram", instance.is_telegram
         )
         instance.is_phone = validated_data.get("is_phone", instance.is_phone)
-        instance.is_push = validated_data.get("is_phone", instance.is_phone)
+        instance.is_push = validated_data.get("is_push", instance.is_push)
+        instance.save()
         return instance
 
 
-class InterestsSerializer(serializers.Serializer):
-    tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), many=True
+class InterestsSerializer(Serializer):
+    """Сериализатор интересов пользователя,
+    показывает интересные теги и города в личном кабинете.
+    """
+
+    tags = PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(),
+        many=True,
     )
-    cities = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all(), many=True
+    cities = PrimaryKeyRelatedField(
+        queryset=City.objects.all(),
+        many=True,
     )
 
     class Meta:
@@ -137,22 +159,6 @@ class InterestsSerializer(serializers.Serializer):
             "tags",
             "cities",
         )
-
-    def create(self, validated_data):
-        tags_data = validated_data.get("tags", [])
-        cities_data = validated_data.get("cities", [])
-        user = self.context.get("request").user
-
-        user.tags.clear()
-        user.cities.clear()
-
-        for tag in tags_data:
-            user.tags.add(tag)
-
-        for city in cities_data:
-            user.cities.add(city)
-
-        return user
 
     def update(self, instance, validated_data):
         tags_data = validated_data.get("tags", [])
@@ -168,5 +174,5 @@ class InterestsSerializer(serializers.Serializer):
             city = City.objects.get(id=cities.id)
             instance.cities.add(city)
 
-        instance.save
+        instance.save()
         return instance
