@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ENV_FILE="${{ secrets.ENV_FILE_PATH }}"
-
+ENV_FILE="$1"
+$ENV_FILE
 if [ -f "$ENV_FILE" ]; then
   echo "Файл $ENV_FILE уже существует. Удаление файла"
   rm "$ENV_FILE"

@@ -34,11 +34,12 @@ repos:
         args: [--py310-plus]
 
 # Сканер стилистических ошибок, нарушающие договоренности PEP8
-#   - repo: https://github.com/PyCQA/flake8
-#     rev: 7.0.0
-#     hooks:
-#       - id: flake8
-#         exclude: ^.*/migrations/.*, ^.*funtech/.*, ^.*/management/.*
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        entry: pflake8
+        additional_dependencies: [pyproject-flake8]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.8.0
