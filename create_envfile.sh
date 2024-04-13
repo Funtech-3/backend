@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_FILE="${{ secrets.ENV_FILE_PATH }}"
+ENV_FILE=".env"
 
 if [ -z "$ENV_FILE" ]; then
   echo "Переменная ENV_FILE не определена."
@@ -9,7 +9,7 @@ fi
 
 if [ -f "$ENV_FILE" ]; then
   echo "Файл $ENV_FILE уже существует. Удаление файла"
-  rm "$ENV_FILE" || {echo "Ошибка при удалении файла $ENV_FILE"; exit 1; }
+  rm "$ENV_FILE"
 fi
 
 cat <<EOF > "$ENV_FILE"
