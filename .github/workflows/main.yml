@@ -55,16 +55,16 @@ jobs:
       - build_gateway_and_push_to_docker_hub
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Create .env-file via ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          script: |
-            bash ./infra/create_env-file.sh
+        uses: actions/checkout@v4
+      # - name: Create .env-file via ssh
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     passphrase: ${{ secrets.SSH_PASSPHRASE }}
+      #     script: |
+      #       bash ./infra/create_envfile.sh
       - name: Copy docker-compose.production.yml via ssh
         uses: appleboy/scp-action@master
         with:
