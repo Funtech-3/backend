@@ -35,7 +35,6 @@ services:
       - 8000:80
     depends_on:
       - backend
-      - frontend
       - db
 
   # на будущее
@@ -56,9 +55,9 @@ services:
   #     - redis
   #     - db
 
-  frontend:
-    image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME}_frontend
-    env_file: .env
-    command: cp -r /app/build/. /frontend_static/
-    volumes:
-      - static:/frontend_static
+  # frontend:
+  #   image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME}_frontend
+  #   env_file: .env
+  #   command: cp -r /app/build/. /frontend_static/
+  #   volumes:
+  #     - static:/frontend_static
