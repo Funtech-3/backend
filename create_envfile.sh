@@ -1,10 +1,15 @@
 #!/bin/bash
 
-ENV_FILE="$1"
-$ENV_FILE
+ENV_FILE="${{ secrets.ENV_FILE_PATH }}"
+
+if [ -z "$ENV_FILE" ]; then
+  echo "Переменная ENV_FILE не определена."
+  exit 1
+fi
+
 if [ -f "$ENV_FILE" ]; then
   echo "Файл $ENV_FILE уже существует. Удаление файла"
-  rm "$ENV_FILE"
+  rm "$ENV_FILE" || {echo "Ошибка при удалении файла $ENV_FILE"; exit 1; }
 fi
 
 cat <<EOF > "$ENV_FILE"
@@ -24,5 +29,8 @@ DEBUG=${{ secrets.DEBUG }}
 REDIS_HOST=${{ secrets.REDIS_HOST }}
 REDIS_PORT=${{ secrets.REDIS_PORT }}
 EOF
+
+chmod +x "$ENV_FILE" || { echo "Ошибка при назначении
+разрешений на выполнение файла $ENV_FILE"; exit 1; }
 
 echo "Файл $ENV_FILE успешно создан."
