@@ -73,9 +73,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            ls
-            cd funtech && ls
-           #  bash ./create_envfile.sh /funtech/.env
+            cd funtech
+            bash ./create_envfile.sh
       - name: Copy docker-compose.production.yml via ssh
         uses: appleboy/scp-action@master
         with:
