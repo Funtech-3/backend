@@ -1,11 +1,11 @@
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
 
-class IsAuthenticatedAndOwner(permissions.BasePermission):
+class IsAuthenticatedAndOwner(BasePermission):
     """Пермишен для владельца ЛК, на изменение и просмотр своих данных."""
 
     def has_permission(self, request, view):
-        if request.method in ["POST", "DELETE"]:
+        if request.method == "DELETE":
             return False
         return request.user.is_authenticated
 

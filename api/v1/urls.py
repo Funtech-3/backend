@@ -14,24 +14,24 @@ from users.views import (
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r"events", EventViewSet, basename="event")
-router_v1.register(
-    "user/notifications",
-    NotificationsViewSet.as_view({"get": "list"}),
-    basename="notifications",
-)
 router_v1.register("user/ticket", UserTicketViewSet, basename="ticket")
-router_v1.register(
-    "user/interests",
-    InterestsViewSet.as_view({"get": "list"}),
-    basename="interests",
-)
 router_v1.register("user", CustomUserViewSet, basename="user")
-router_v1.register("tags", TagsViewSet)
-router_v1.register("cities", CitiesViewSet)
 
 
 urlpatterns = [
+    path(
+        "user/notifications/",
+        NotificationsViewSet.as_view(),
+        name="user-notifications",
+    ),
     path("", include(router_v1.urls)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("schema/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
+    path(
+        "user/interests/",
+        InterestsViewSet.as_view(),
+        name="interests",
+    ),
+    path("tags/", TagsViewSet.as_view(), name="tags"),
+    path("cities/", CitiesViewSet.as_view(), name="cities"),
 ]

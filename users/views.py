@@ -1,10 +1,13 @@
+from http.client import BAD_REQUEST, CREATED, OK
+
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, status, viewsets
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from users.mixins import RetrieveUpdateViewSet
 
 from .models import City, NotificationSwitch, Tag
 from .permissions import IsAuthenticatedAndOwner
@@ -19,10 +22,14 @@ from .serializers import (
 User = get_user_model()
 
 
-class CustomUserViewSet(viewsets.ViewSet):
+class CustomUserViewSet(ViewSet):
+    """Возвращяет экземпляр юзера, создает и изменяет.
+    Используется ЯндексID для создания юзера и токена.
+    """
+
     serializer_class = CustomUserSerializer
     pagination_class = None
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (AllowAny,)
 
     def retrieve(self, request, pk=None):
         """Безопасный метод получения информации о юзере."""
@@ -36,16 +43,17 @@ class CustomUserViewSet(viewsets.ViewSet):
             "refresh_token": str(refresh_token),
             "user": serializer.data,
         }
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(response_data, status=OK)
 
     def create(self, request):
         """Метод создания или получения юзера."""
+
         yandex_id = request.data.get("yandex_id")
         if yandex_id:
             user = User.objects.filter(yandex_id=yandex_id).first()
             if user:
                 serializer = self.serializer_class(user)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.data, status=OK)
             username = request.data.get("login", None)
             email = request.data.get("default_email", None)
             phone_number = request.data.get("defaulte_phone", {}).get(
@@ -71,8 +79,8 @@ class CustomUserViewSet(viewsets.ViewSet):
                 "refresh_token": str(refresh_token),
                 "user": serializer.data,
             }
-            return Response(response_data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(response_data, status=CREATED)
+        return Response(status=BAD_REQUEST)
 
     def update(self, request, pk=None):
         """метод обновления данных о юзере."""
@@ -83,52 +91,78 @@ class CustomUserViewSet(viewsets.ViewSet):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=OK)
 
 
-class NotificationsViewSet(RetrieveUpdateViewSet):
+class NotificationsViewSet(APIView):
     """Представление для уведомлений в личном кабинете юзера."""
 
-    queryset = NotificationSwitch.objects.all().select_related("user")
-    pagination_class = None
     serializer_class = NotificationSwitchSerializer
-    permission_classes = (IsAuthenticatedAndOwner,)
 
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)
+    def get(self, request):
+        user = get_object_or_404(User, id=self.request.user.id)
+        notifications = get_object_or_404(NotificationSwitch, user_id=user.id)
+        serializer = NotificationSwitchSerializer(notifications)
+        return Response(serializer.data, status=OK)
+
+    def post(self, request):
+        user = get_object_or_404(User, id=self.request.user.id)
+        notification, created = NotificationSwitch.objects.get_or_create(
+            user=user
+        )
+        if not created:
+            return Response(
+                {"message": "Уведомления уже созданы"}, status=BAD_REQUEST
+            )
+        serializer = NotificationSwitchSerializer(
+            notification, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=CREATED)
+        return Response(serializer.errors, status=BAD_REQUEST)
+
+    def patch(self, request):
+        notification = get_object_or_404(
+            NotificationSwitch, id=self.request.user.id
+        )
+        serializer = NotificationSwitchSerializer(
+            notification, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=OK)
+        return Response(serializer.errors, status=BAD_REQUEST)
 
 
-class InterestsViewSet(RetrieveUpdateViewSet):
+class InterestsViewSet(RetrieveUpdateAPIView):
     """Представление для тегов и городов в личном кабинете юзера."""
 
     serializer_class = InterestsSerializer
     permission_classes = (IsAuthenticatedAndOwner,)
     pagination_class = None
 
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id).prefetch_related(
-            "tags", "cities"
-        )
-
-    # def update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_object(self):
+        return self.request.user
 
 
-class TagsViewSet(viewsets.ReadOnlyModelViewSet):
+class TagsViewSet(ListAPIView):
     """Представление для тегов для главной страницы."""
 
     serializer_class = TagsSerializer
     queryset = Tag.objects.all()
     pagination_class = None
 
+    def get_object(self):
+        return self.request.user
 
-class CitiesViewSet(viewsets.ReadOnlyModelViewSet):
+
+class CitiesViewSet(ListAPIView):
     """Представление для тегов для главной страницы."""
 
     serializer_class = CitiesSerializer
     queryset = City.objects.all()
     pagination_class = None
+
+    def get_object(self):
+        return self.request.user
