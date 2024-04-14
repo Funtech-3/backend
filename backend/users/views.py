@@ -50,7 +50,7 @@ class CustomUserViewSet(ViewSet):
         """Метод создания или получения пользователя."""
 
         data = request.data
-        yandex_id = data.get("yandex_id")
+        yandex_id = data.get("id") or data.get("yandex_id")
         if yandex_id:
             user = User.objects.filter(yandex_id=yandex_id).first()
             if user:
@@ -58,12 +58,14 @@ class CustomUserViewSet(ViewSet):
                 return Response(serializer.data, status=OK)
             first_name = data.get("first_name", None)
             last_name = data.get("last_name", None)
-            username = data.get("login", "username")
-            email = data.get("default_email", "email")
-            phone_number = data.get("defaulte_phone", {}).get(
-                "number", "phone_number"
+            username = data.get("login") or data.get("username")
+            email = data.get("default_email") or data.get("email")
+            phone_number = data.get("default_phone", {}).get(
+                "number"
+            ) or data.get("phone_number")
+            default_avatar_id = data.get("default_avatar_id") or data.get(
+                "avatar"
             )
-            default_avatar_id = data.get("default_avatar_id", "avatar")
             avatar_url = (
                 f"https://avatars.yandex.net/get-yapic/{default_avatar_id}/"
             )
