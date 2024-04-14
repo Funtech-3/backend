@@ -76,9 +76,20 @@ class TestEventAPI:
             f'неавторизованным пользователям.'
         )
 
+    def test_favorite_post_not_auth(self, client, event, url_event_favorite):
+        response = client.post(url_event_favorite)
+        assert response.status_code == HTTPStatus.UNAUTHORIZED, (
+            'У анонимных пользователей не должно быть возможности '
+            'добавить событие в избранное.'
+        )
+
     def test_favorite_post_auth(self, user_client, url_event_favorite, event):
         response = user_client.post(url_event_favorite)
         assert response.status_code == HTTPStatus.CREATED
+        response_data = response.json()
+        assert isinstance(response_data, dict)
+        assert 'is_in_favorites' in response_data
+        assert response_data['is_in_favorites']
 
     def test_favorite_delete_auth(
         self, user_client, url_event_favorite, user, event
