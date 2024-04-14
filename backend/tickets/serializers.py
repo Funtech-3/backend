@@ -17,3 +17,13 @@ class UserTicketReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = ("ticket_id", "city", "code", "name", "date_event")
+
+
+class CheckTicketReadSerializer(UserTicketReadSerializer):
+    """Сериализатор для Билетов по UUID."""
+
+    event_slug = serializers.CharField(read_only=True, source="event.slug")
+
+    class Meta(UserTicketReadSerializer.Meta):
+        
+        fields = UserTicketReadSerializer.Meta.fields + ("event_slug",)
