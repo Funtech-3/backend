@@ -7,7 +7,9 @@ from users.models import NotificationSwitch
 
 @receiver(pre_save, sender=Registration)
 def watch_registration_status(sender, instance, **kwargs):
-    print("Get pre_save model Registration signal.")
+    """Сигнал для модели Registration отслеживает событие перед сохранение.
+    Если статус регистрации меняется на CONFIRMED и включены уведомления
+    на email, на почту клиента."""
     is_notification = False
     is_email = False
     old_status = ""

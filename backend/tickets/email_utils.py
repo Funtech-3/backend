@@ -1,5 +1,5 @@
-import os
-import socket
+"""Модуль утилит отправки уведомлений по электронной почте."""
+
 from datetime import datetime
 from email.mime.image import MIMEImage
 from io import BytesIO
@@ -7,24 +7,13 @@ from io import BytesIO
 import qrcode
 from django.conf import settings
 from django.core.mail import EmailMessage
-from tickets.models import Registration
-
-host = socket.gethostname()
-
-TICKET_CHECK_URL = os.getenv("TICKET_CHECK_URL")
-QR_CODE_CONTENT_ID = "qrcode"
-TICKET_LETTER_TEMPLATE = (
-    "<HTML><BODY>"
-    "<h1>Ваш билет</h1>"
-    "<h2>{}</h2>"
-    "<h3>{}</h3>"
-    "<h2>{}</h2>"
-    "<h3>{}</h3>"
-    '<img src="cid:{}">'
-    "</BODY></HTML>"
+from tickets.constants import (
+    QR_CODE_CONTENT_ID,
+    TICKET_CHECK_URL_TEMPLATE,
+    TICKET_LETTER_SUBJECT,
+    TICKET_LETTER_TEMPLATE,
 )
-TICKET_LETTER_SUBJECT = "Ваш билет"
-TICKET_CHECK_URL_TEMPLATE = "https://funtech.myddns.me/api/v1/ticket_check/{}/"
+from tickets.models import Registration
 
 
 def make_qr_code_image_data(data_to_encode: str) -> bytes:
@@ -96,5 +85,3 @@ def send_ticket_info(ticket: Registration):
         )
     )
     letter.send(fail_silently=False)
-    host = socket.gethostname()
-    print(host)
