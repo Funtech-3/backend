@@ -165,3 +165,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://funtech-3.vercel.app",
 ]
+
+CSRF_TRUSTED_ORIGINS = ["https://funtech.myddns.me"]
