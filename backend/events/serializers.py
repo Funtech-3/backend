@@ -60,6 +60,7 @@ class EventPreviewSerializer(serializers.ModelSerializer):
             "event_id",
             "slug",
             "name",
+            "description",
             "city",
             "date_event",
             "registration_status",
