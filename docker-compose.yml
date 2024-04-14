@@ -29,7 +29,13 @@ services:
       - media:/app/media/
     ports:
       - "8000:8000"
-
+      # - "587:587"
+      - "465:465"
+      # - "25:25"
+    expose:
+      # - 587
+      - 465
+      # - 25
   nginx:
     build:
       context: ./nginx/
