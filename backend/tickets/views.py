@@ -2,7 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, AllowAny
-from tickets.mixins import RetrieveDestroyViewSet
+from tickets.mixins import RetrieveDestroyViewSet, RetrieveViewSet
 from tickets.models import Registration
 from tickets.permissions import IsOwner
 from tickets.serializers import UserTicketReadSerializer, CheckTicketReadSerializer
