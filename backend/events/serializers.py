@@ -58,7 +58,9 @@ class EventPreviewSerializer(serializers.ModelSerializer):
         model = Event
         fields = (
             "event_id",
+            "slug",
             "name",
+            "description",
             "city",
             "date_event",
             "registration_status",

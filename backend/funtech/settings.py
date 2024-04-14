@@ -166,4 +166,4 @@ CORS_ALLOWED_ORIGINS = [
     "https://funtech-3.vercel.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_DOMAIN", "")]
+CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_DOMAIN", "http://localhost/")]
