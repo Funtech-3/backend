@@ -1,5 +1,5 @@
 from datetime import date, time, timedelta
-import tempfile
+from tempfile import NamedTemporaryFile
 
 import pytest
 
@@ -47,7 +47,7 @@ def speaker(db):
 
 @pytest.fixture
 def image():
-    return tempfile.NamedTemporaryFile(suffix='.jpg').name
+    return NamedTemporaryFile(suffix='.jpg').name
 
 
 @pytest.fixture
