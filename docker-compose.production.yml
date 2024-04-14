@@ -24,6 +24,8 @@ services:
       - media:/app/media/
     depends_on:
       - db
+    expose:
+      - 465
 
   gateway:
     image: ${DOCKER_USERNAME}/${PROJECT_NAME}_gateway
