@@ -65,6 +65,22 @@ def event(db, city, image, tag):
 
 
 @pytest.fixture
+def event_list(db, city, image):
+    return Event.objects.bulk_create(
+        Event(
+            title=f'Тестовое событие {index}',
+            description='Тестовое',
+            slug=f'test-event-{index}',
+            city=city,
+            address='Зимний дворец',
+            date=date.today() + timedelta(days=index),
+            image=image,
+        )
+        for index in range(LEN_OBJ_IN_LIST)
+    )
+
+
+@pytest.fixture
 def event_steps(db, events, speaker):
     steps = EventStep.objects.bulk_create(
         EventStep(
