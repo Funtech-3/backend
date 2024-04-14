@@ -163,5 +163,5 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://funtech-3.vercel.app/",
+    "https://funtech-3.vercel.app",
 ]
