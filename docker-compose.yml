@@ -62,9 +62,9 @@ services:
   #     - redis
   #     - db
 
-  frontend:
-    image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME_FRONT}
-    env_file: .env
-    command: cp -r /app/build/. /frontend_static/
-    volumes:
-      - static:/frontend_static
+  # frontend:
+  #   image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME_FRONT}
+  #   env_file: .env
+  #   command: cp -r /app/build/. /frontend_static/
+  #   volumes:
+  #     - static:/frontend_static
