@@ -14,7 +14,6 @@ from .filters import EventFilter
 from .models import Event
 from .serializers import EventDetailSerializer, EventPreviewSerializer
 
-
 EVENT_IN_FAVORITE = 'Событие {} уже есть в избранном.'
 EVENT_NOT_IN_FAVORITE = 'Событие {} не добавлено в избранное.'
 
