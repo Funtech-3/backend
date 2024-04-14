@@ -63,10 +63,8 @@ class CustomUserViewSet(ViewSet):
             phone_number = data.get("default_phone", {}).get(
                 "number"
             ) or data.get("phone_number")
-            default_avatar_id = data.get("default_avatar_id") or data.get(
-                "avatar"
-            )
-            avatar_url = (
+            default_avatar_id = data.get("default_avatar_id")
+            avatar_url = data.get("avatar") or (
                 f"https://avatars.yandex.net/get-yapic/{default_avatar_id}/"
             )
             telegram_username = data.get("telegram_username", None)
