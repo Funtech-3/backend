@@ -140,6 +140,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 3,
     "DATE_FORMAT": "%d.%m.%Y",
     "TIME_FORMAT": "%H:%M",
 }
@@ -166,4 +167,4 @@ CORS_ALLOWED_ORIGINS = [
     "https://funtech-3.vercel.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_DOMAIN", "")]
+CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_DOMAIN", "http://localhost")]
