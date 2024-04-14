@@ -1,11 +1,10 @@
 from datetime import date, time, timedelta
 
-import tempfile
 import pytest
+import tempfile
 
-from events.models import Event, Speaker, EventStep
+from events.models import Event, EventStep, Speaker
 from users.models import City, Tag
-
 
 LEN_OBJ_IN_LIST = 5
 
