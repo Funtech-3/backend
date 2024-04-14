@@ -13,4 +13,5 @@ class TicketsConfig(AppConfig):
     def ready(self):
         """Активация сигналов при включении приложения."""
         from . import signals
+
         pass

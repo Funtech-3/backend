@@ -1,17 +1,17 @@
 import os
-import qrcode
-from datetime import datetime
-from django.core.mail import EmailMessage
-from datetime import datetime
-
-from io import BytesIO
-from email.mime.image import MIMEImage
-from django.conf import settings
-from tickets.models import Registration
 import socket
+from datetime import datetime
+from email.mime.image import MIMEImage
+from io import BytesIO
+
+import qrcode
+from django.conf import settings
+from django.core.mail import EmailMessage
+from tickets.models import Registration
+
 host = socket.gethostname()
 
-TICKET_CHECK_URL = os.getenv('TICKET_CHECK_URL')
+TICKET_CHECK_URL = os.getenv("TICKET_CHECK_URL")
 QR_CODE_CONTENT_ID = "qrcode"
 TICKET_LETTER_TEMPLATE = (
     "<HTML><BODY>"
@@ -20,14 +20,14 @@ TICKET_LETTER_TEMPLATE = (
     "<h3>{}</h3>"
     "<h2>{}</h2>"
     "<h3>{}</h3>"
-    "<img src=\"cid:{}\">"
+    '<img src="cid:{}">'
     "</BODY></HTML>"
 )
 TICKET_LETTER_SUBJECT = "Ваш билет"
-TICKET_CHECK_URL_TEMPLATE='https://funtech.myddns.me/api/v1/ticket_check/{}/'
+TICKET_CHECK_URL_TEMPLATE = "https://funtech.myddns.me/api/v1/ticket_check/{}/"
 
 
-def make_qr_code_image_data(data_to_encode: str) -> BytesIO:
+def make_qr_code_image_data(data_to_encode: str) -> bytes:
     """Создает изображение QR-кода.
     Возвращает массив байт изображения."""
     qr_image = qrcode.make(data_to_encode)
@@ -41,7 +41,7 @@ def prepare_MIME_image_for_email(image: bytes) -> MIMEImage:
     """Возвращает MIMEImage объект из данных изображения,
     устанавливает заголовок объекта для письма."""
     mime_image = MIMEImage(image)
-    mime_image.add_header('Content-ID', f'<{QR_CODE_CONTENT_ID}>')
+    mime_image.add_header("Content-ID", f"<{QR_CODE_CONTENT_ID}>")
     return mime_image
 
 
@@ -53,8 +53,8 @@ def extract_ticket_info(ticket: Registration) -> dict:
         event_type=ticket.event.type,
         city=ticket.event.city.name,
         event_date=datetime.strftime(
-            ticket.event.date, 
-            settings.REST_FRAMEWORK.get("DATE_FORMAT", "%d.%m.%Y")
+            ticket.event.date,
+            settings.REST_FRAMEWORK.get("DATE_FORMAT", "%d.%m.%Y"),
         ),
         recipient=ticket.user.email,
         code=ticket.code,
@@ -62,7 +62,7 @@ def extract_ticket_info(ticket: Registration) -> dict:
     return result
 
 
-def prepare_letter_body(ticket_info: dict)-> str:
+def prepare_letter_body(ticket_info: dict) -> str:
     """ПОдготовка тела письма."""
     body = TICKET_LETTER_TEMPLATE.format(
         ticket_info.get("event_type"),
@@ -82,15 +82,16 @@ def send_ticket_info(ticket: Registration):
         subject=TICKET_LETTER_SUBJECT,
         from_email=settings.EMAIL_HOST_USER,
         body=prepare_letter_body(ticket_info=ticket_info),
-        to=(settings.EMAIL_HOST_USER, ticket_info.get('recipient'),)
+        to=(
+            settings.EMAIL_HOST_USER,
+            ticket_info.get("recipient"),
+        ),
     )
     letter.content_subtype = "html"
     letter.attach(
         prepare_MIME_image_for_email(
             make_qr_code_image_data(
-                TICKET_CHECK_URL_TEMPLATE.format(
-                    ticket_info.get("code")
-                )
+                TICKET_CHECK_URL_TEMPLATE.format(ticket_info.get("code"))
             )
         )
     )
