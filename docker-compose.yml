@@ -9,7 +9,7 @@ volumes:
 services:
   db:
     image: postgres:16.2-alpine
-    restsrt: unless-stopped
+    restart: unless-stopped
     ports:
       - "5432:5432"
     env_file: .env
@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
     volumes:
-      - static:/app/static/
+      - static:/static_backend/
       - media:/app/media/
     ports:
       - "8000:8000"
@@ -42,7 +42,6 @@ services:
       - media:/app/media/
     depends_on:
       - backend
-      - frontend
       - db
 
   # на будущее
