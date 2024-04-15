@@ -4,7 +4,7 @@ from django.urls import reverse
 
 @pytest.fixture
 def url_event_list():
-    return reverse('event-list')
+    return reverse("event-list")
 
 
 @pytest.fixture

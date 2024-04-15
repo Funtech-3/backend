@@ -1,7 +1,7 @@
 version: '3.3'
 
 volumes:
-  pg_data:
+  pg_data16:
   static:
   media:
   service:
@@ -14,7 +14,7 @@ services:
       - "5432:5432"
     env_file: .env
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data16:/var/lib/postgresql/data
 
   backend:
     build:
@@ -29,7 +29,9 @@ services:
       - media:/app/media/
     ports:
       - "8000:8000"
-
+      # - "465:465"
+    expose:
+      - 465
   nginx:
     build:
       context: ./nginx/
@@ -62,9 +64,9 @@ services:
   #     - redis
   #     - db
 
-  frontend:
-    image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME_FRONT}
-    env_file: .env
-    command: cp -r /app/build/. /frontend_static/
-    volumes:
-      - static:/frontend_static
+  # frontend:
+  #   image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME_FRONT}
+  #   env_file: .env
+  #   command: cp -r /app/build/. /frontend_static/
+  #   volumes:
+  #     - static:/frontend_static

@@ -2,7 +2,7 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from events.views import EventViewSet, FavoriteView
 from rest_framework import routers
-from tickets.views import UserTicketViewSet
+from tickets.views import CheckTicketViewSet, UserTicketViewSet
 from users.views import (
     CitiesListView,
     CustomUserViewSet,
@@ -13,6 +13,9 @@ from users.views import (
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r"events", EventViewSet, basename="event")
+router_v1.register(
+    "user/ticket_check", CheckTicketViewSet, basename="ticket_check"
+)
 router_v1.register("user/ticket", UserTicketViewSet, basename="ticket")
 router_v1.register("user", CustomUserViewSet, basename="user")
 

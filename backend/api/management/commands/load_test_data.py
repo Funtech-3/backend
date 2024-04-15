@@ -107,20 +107,18 @@ class Command(BaseCommand):
         for row in DictReader(f=open(SPEAKER_CSV, encoding=UTF)):
             counter += 1
             object, created = Speaker.objects.update_or_create(**row)
+            img_path = os.path.join(
+                SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter)
+            )
             f = open(
-                os.path.join(SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter)),
-                # f'{SPEAKER_IMAGE_PATH}{SPEAKER_IMAGES.get(counter)}',
+                img_path,
                 mode="rb",
             )
             image_file = File(f)
             object.image.save(
                 SPEAKER_IMAGES.get(counter), image_file, save=True
             )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"{os.path.join(SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter))} {MESSAGE}"
-                )
-            )
+            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
         self.stdout.write(self.style.SUCCESS(f"{SPEAKER_CSV} {MESSAGE}"))
 
     def load_users(self):
@@ -129,17 +127,14 @@ class Command(BaseCommand):
         for row in DictReader(f=open(USERS_CSV, encoding=UTF)):
             counter += 1
             object, created = User.objects.update_or_create(**row)
+            img_path = os.path.join(USER_IMAGE_PATH, USER_IMAGES.get(counter))
             f = open(
-                os.path.join(USER_IMAGE_PATH, USER_IMAGES.get(counter)),
+                img_path,
                 mode="rb",
             )
             image_file = File(f)
             object.avatar.save(USER_IMAGES.get(counter), image_file, save=True)
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"{os.path.join(USER_IMAGE_PATH, USER_IMAGES.get(counter))} {MESSAGE}"
-                )
-            )
+            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
         self.stdout.write(self.style.SUCCESS(f"{USERS_CSV} {MESSAGE}"))
 
     def load_users_tags(self):
@@ -190,11 +185,11 @@ class Command(BaseCommand):
                 city=city,
                 **row,
             )
-
+            img_path = os.path.join(
+                EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter)
+            )
             f = open(
-                os.path.join(
-                    EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter)
-                ),
+                img_path,
                 mode="rb",
             )
             preview_image_file = File(f)
@@ -203,25 +198,19 @@ class Command(BaseCommand):
                 preview_image_file,
                 save=True,
             )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"{os.path.join(EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter))} {MESSAGE}"
-                )
+            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
+            img_path = os.path.join(
+                EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter)
             )
-
             f = open(
-                os.path.join(EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter)),
+                img_path,
                 mode="rb",
             )
             full_image_file = File(f)
             event_object.image.save(
                 EVENT_FULL_IMAGES.get(counter), full_image_file, save=True
             )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"{os.path.join(EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter))} {MESSAGE}"
-                )
-            )
+            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
             event_object.save()
 
         self.stdout.write(self.style.SUCCESS(f"{EVENT_CSV} {MESSAGE}"))

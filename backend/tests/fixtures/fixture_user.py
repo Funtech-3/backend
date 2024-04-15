@@ -3,16 +3,12 @@ import pytest
 
 @pytest.fixture
 def user(django_user_model):
-    return django_user_model.objects.create(
-        yandex_id=11111
-    )
+    return django_user_model.objects.create(yandex_id=11111)
 
 
 @pytest.fixture
 def another_user(django_user_model):
-    return django_user_model.objects.create(
-        yandex_id=22222
-    )
+    return django_user_model.objects.create(yandex_id=22222)
 
 
 @pytest.fixture

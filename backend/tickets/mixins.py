@@ -11,3 +11,12 @@ class RetrieveDestroyViewSet(
     """Вьюсет на чтение, удаление."""
 
     pass
+
+
+class RetrieveViewSet(
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    """Вьюсет на чтение."""
+
+    pass

@@ -10,15 +10,15 @@ class TestEventAPI:
 
     def test_events_not_found(self, client, url_event_list):
         response = client.get(url_event_list)
-        assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт {url_event_list} не найден.'
-        )
+        assert (
+            response.status_code != HTTPStatus.NOT_FOUND
+        ), f"Эндпоинт {url_event_list} не найден."
 
     def test_event_list_not_auth(self, client, url_event_list):
         response = client.get(url_event_list)
         assert response.status_code == HTTPStatus.OK, (
-            f'Эндпоинт {url_event_list} должен быть доступен'
-            f'неавторизованным пользователям.'
+            f"Эндпоинт {url_event_list} должен быть доступен"
+            f"неавторизованным пользователям."
         )
 
     def test_event_list_auth(self, user_client, url_event_list):
@@ -60,8 +60,8 @@ class TestEventAPI:
     def test_event_detail_not_auth(self, client, url_event_detail, event):
         response = client.get(url_event_detail)
         assert response.status_code == HTTPStatus.OK, (
-            f'Эндпоинт {url_event_detail} должен быть доступен'
-            f'неавторизованным пользователям.'
+            f"Эндпоинт {url_event_detail} должен быть доступен"
+            f"неавторизованным пользователям."
         )
         data = response.json()
         assert isinstance(data, dict), (

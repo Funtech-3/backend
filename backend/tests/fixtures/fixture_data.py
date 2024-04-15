@@ -11,52 +11,50 @@ LEN_OBJ_IN_LIST = 5
 @pytest.fixture
 def cities_list(db):
     return City.objects.bulk_create(
-        City(name=f'Город {index}')
-        for index in range(LEN_OBJ_IN_LIST)
+        City(name=f"Город {index}") for index in range(LEN_OBJ_IN_LIST)
     )
 
 
 @pytest.fixture
 def city(db):
-    return City.objects.create(name='Тестовый город')
+    return City.objects.create(name="Тестовый город")
 
 
 @pytest.fixture
 def tags_list(db):
     return Tag.objects.bulk_create(
-        Tag(title=f'Тег {index}')
-        for index in range(LEN_OBJ_IN_LIST)
+        Tag(title=f"Тег {index}") for index in range(LEN_OBJ_IN_LIST)
     )
 
 
 @pytest.fixture
 def tag(db):
-    return Tag.objects.create(title='Тестовый тег')
+    return Tag.objects.create(title="Тестовый тег")
 
 
 @pytest.fixture
 def speaker(db):
     return Speaker.objects.create(
-        first_name='Иван',
-        last_name='Иванов',
-        work_place='ACME',
-        position='Работник'
+        first_name="Иван",
+        last_name="Иванов",
+        work_place="ACME",
+        position="Работник",
     )
 
 
 @pytest.fixture
 def image():
-    return NamedTemporaryFile(suffix='.jpg').name
+    return NamedTemporaryFile(suffix=".jpg").name
 
 
 @pytest.fixture
 def event(db, city, image, tag):
     event = Event.objects.create(
-        title='Тестовое событие',
-        description='Тестовое',
-        slug='test-event',
+        title="Тестовое событие",
+        description="Тестовое",
+        slug="test-event",
         city=city,
-        address='Зимний дворец',
+        address="Зимний дворец",
         date=date.today() + timedelta(days=7),
         image=image,
     )
@@ -84,10 +82,10 @@ def event_list(db, city, image):
 def event_steps(db, events, speaker):
     steps = EventStep.objects.bulk_create(
         EventStep(
-            title=f'Этап события {index}',
+            title=f"Этап события {index}",
             start_time=time(hour=index),
-            description=f'Событие {index}',
-            event=event
+            description=f"Событие {index}",
+            event=event,
         )
         for index, event in enumerate(events)
     )
