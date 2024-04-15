@@ -1,5 +1,7 @@
 name: Main Funtech deploy
 on:
+  repository_dispatch:
+    types: [run-backend-workflow]
   push:
     branches: [ 'main', 'dev']
     paths-ignore:
