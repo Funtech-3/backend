@@ -1,7 +1,7 @@
-id,first_name,last_name,work_place,position,iamge
-1,Андрей,Пронин,ПронинТим,CEO,
-2,Тимофей,Хирьянов,МФТИ,Преподователь,
-3,Senior,Pomidor,django_work,TeamLead,
-4,"Вера ",Первая,Яндекс,ТехЛид,
-5,Дина,Гринина,Яндекс,HR,
-6,Фидель,Кастро,Куба,Президент,
+first_name,last_name,work_place,position
+Андрей,Пронин,ПронинТим,CEO
+Тимофей,Хирьянов,МФТИ,Преподователь
+Senior,Pomidor,django_work,TeamLead
+Вера,Первая,Яндекс,ТехЛид
+Дина,Гринина,Яндекс,HR
+Фидель,Кастро,Куба,Президент

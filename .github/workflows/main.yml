@@ -86,7 +86,7 @@ jobs:
               REDIS_PORT=${{ secrets.REDIS_PORT }}
               CSRF_DOMAIN=${{ secrets.CSRF_DOMAIN }}
               EMAIL_HOST=${{ secrets.EMAIL_HOST }}
-              EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+              EMAIL_PORT=${{ secrets.EMAIL_HOST_PORT }}
               EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
               EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
             _EOF_
@@ -111,9 +111,9 @@ jobs:
             sudo docker compose -f docker-compose.production.yml pull
             sudo docker compose -f docker-compose.production.yml down
             sudo docker compose -f docker-compose.production.yml up -d
-            sudo docker rmi $(docker images -a -q)
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/static/. /static_backend/static/
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py make_admin
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_test_data
+            docker image prune -a -f --filter "until=24h"

@@ -2,6 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
+
 from tickets.mixins import RetrieveDestroyViewSet, RetrieveViewSet
 from tickets.models import Registration
 from tickets.permissions import IsOwner

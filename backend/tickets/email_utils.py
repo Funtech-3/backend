@@ -7,6 +7,7 @@ from io import BytesIO
 import qrcode
 from django.conf import settings
 from django.core.mail import EmailMessage
+
 from tickets.constants import (
     QR_CODE_CONTENT_ID,
     TICKET_CHECK_URL_TEMPLATE,
@@ -52,7 +53,7 @@ def extract_ticket_info(ticket: Registration) -> dict:
 
 
 def prepare_letter_body(ticket_info: dict) -> str:
-    """ПОдготовка тела письма."""
+    """Подготовка тела письма."""
     body = TICKET_LETTER_TEMPLATE.format(
         ticket_info.get("event_type"),
         ticket_info.get("event_name"),

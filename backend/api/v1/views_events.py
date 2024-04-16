@@ -1,9 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from drf_spectacular.utils import extend_schema
-from events.filters import EventFilter
-from events.models import Event
-from events.serializers import EventDetailSerializer, EventPreviewSerializer
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -12,6 +9,10 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from events.filters import EventFilter
+from events.models import Event
+from events.serializers import EventDetailSerializer, EventPreviewSerializer
 from tickets.models import Registration
 
 EVENT_IN_FAVORITE = "Событие {} уже есть в избранном."
@@ -21,6 +22,8 @@ EVENT_NOT_IN_FAVORITE = "Событие {} не добавлено в избра
 class EventViewSet(ReadOnlyModelViewSet):
     """Получение списка событий и конкретного события."""
 
+    cache_key = "events"
+    cache_time = 60 * 10
     lookup_field = "slug"
     filter_backends = (filters.DjangoFilterBackend, SearchFilter)
     filterset_class = EventFilter

@@ -4,8 +4,10 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
+from sentry_sdk.integrations.django import DjangoIntegration
 
 load_dotenv()
 
@@ -31,7 +33,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
-    "djoser",
     "django_filters",
     "drf_spectacular",
     "corsheaders",
@@ -173,7 +174,7 @@ CSRF_TRUSTED_ORIGINS = [os.getenv("CSRF_DOMAIN", "http://localhost")]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT", "465")
+EMAIL_PORT = os.getenv("EMAIL_HOST_PORT", "465")
 EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
@@ -184,3 +185,34 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = [
     EMAIL_HOST_USER,
 ]
+
+sentry_sdk.init(
+    dsn="https://e55f53b2c2e22442777f8c27952a0ccc@o4506547207077888.ingest.us.sentry.io/4507095745888256",
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+
+CACHE = {
+    "default": {
+        "BACKEND": "django-redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Europe/Moscow"
