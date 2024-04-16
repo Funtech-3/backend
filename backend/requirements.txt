@@ -30,6 +30,7 @@ gunicorn==21.2.0
 identify==2.5.35
 idna==3.6
 inflection==0.5.1
+iniconfig==2.0.0
 isort==5.13.2
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
@@ -40,6 +41,7 @@ oauthlib==3.2.2
 packaging==24.0
 pillow==10.3.0
 platformdirs==4.2.0
+pluggy==1.4.0
 pre-commit==3.7.0
 prompt-toolkit==3.0.43
 psycopg2-binary==2.9.9
@@ -48,6 +50,8 @@ pycparser==2.22
 pyflakes==3.2.0
 PyJWT==2.8.0
 pypng==0.20220715.0
+pytest==8.1.1
+pytest-django==4.8.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python3-openid==3.2.0

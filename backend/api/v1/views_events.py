@@ -1,3 +1,8 @@
+from http.client import BAD_REQUEST, CREATED, NO_CONTENT, OK
+
+from django.core.cache import cache
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from drf_spectacular.utils import extend_schema
@@ -22,8 +27,8 @@ EVENT_NOT_IN_FAVORITE = "Событие {} не добавлено в избра
 class EventViewSet(ReadOnlyModelViewSet):
     """Получение списка событий и конкретного события."""
 
-    cache_key = "events"
-    cache_time = 60 * 10
+    cache_key = "events_key"
+    cache_time = 60 * 60
     lookup_field = "slug"
     filter_backends = (filters.DjangoFilterBackend, SearchFilter)
     filterset_class = EventFilter
@@ -38,6 +43,16 @@ class EventViewSet(ReadOnlyModelViewSet):
         if self.action == "retrieve":
             return EventDetailSerializer
         return EventPreviewSerializer
+
+    def list(self, request, *args, **kwargs):
+        cached_data = cache.get(self.cache_key)
+        if cached_data:
+            return Response(cached_data)
+
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        cache.set(self.cache_key, serializer.data, self.cache_time)
+        return Response(serializer.data, status=OK)
 
     @action(
         detail=False,
@@ -56,8 +71,13 @@ class EventViewSet(ReadOnlyModelViewSet):
             user=self.request.user, event=event
         )
         if object:
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=CREATED)
+        return Response(status=BAD_REQUEST)
+
+
+@receiver([post_save, post_delete], sender=Event)
+def invalidate_event_cache(sender, instance, **kwargs):
+    cache.delete("events_key")
 
 
 class FavoriteView(APIView):
@@ -75,7 +95,7 @@ class FavoriteView(APIView):
         event.favorited_by.add(user)
         return Response(
             EventDetailSerializer(event, context={"request": request}).data,
-            status=status.HTTP_201_CREATED,
+            status=CREATED,
         )
 
     def delete(self, request, event_slug):
@@ -87,4 +107,4 @@ class FavoriteView(APIView):
                 {"errors": EVENT_NOT_IN_FAVORITE.format(event)}
             )
         event.favorited_by.remove(request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=NO_CONTENT)
