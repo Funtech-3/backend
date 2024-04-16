@@ -86,21 +86,26 @@ class Command(BaseCommand):
 
         for row in DictReader(f=open(TAGS_CSV, encoding=UTF)):
             Tag.objects.update_or_create(**row)
-        self.stdout.write(self.style.SUCCESS(f"{TAGS_CSV} {MESSAGE}"))
+        count = Tag.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"{TAGS_CSV} {MESSAGE} {count}"))
 
     def load_city(self):
         """Загрузка городов."""
 
         for row in DictReader(f=open(CITY_CSV, encoding=UTF)):
             City.objects.update_or_create(**row)
-        self.stdout.write(self.style.SUCCESS(f"{CITY_CSV} {MESSAGE}"))
+        count = City.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"{CITY_CSV} {MESSAGE} {count}"))
 
     def load_event_type(self):
         """Загрузка типов ивентов."""
 
         for row in DictReader(f=open(EVENT_TYPE_CSV, encoding=UTF)):
             EventType.objects.update_or_create(**row)
-        self.stdout.write(self.style.SUCCESS(f"{EVENT_TYPE_CSV} {MESSAGE}"))
+        count = EventType.objects.all().count()
+        self.stdout.write(
+            self.style.SUCCESS(f"{EVENT_TYPE_CSV} {MESSAGE} {count}")
+        )
 
     def load_speaker(self):
         """Загрузка городов."""
@@ -108,19 +113,23 @@ class Command(BaseCommand):
         for row in DictReader(f=open(SPEAKER_CSV, encoding=UTF)):
             counter += 1
             object, created = Speaker.objects.update_or_create(**row)
-            img_path = os.path.join(
-                SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter)
-            )
-            f = open(
-                img_path,
-                mode="rb",
-            )
-            image_file = File(f)
-            object.image.save(
-                SPEAKER_IMAGES.get(counter), image_file, save=True
-            )
-            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
-        self.stdout.write(self.style.SUCCESS(f"{SPEAKER_CSV} {MESSAGE}"))
+            if created:
+                img_path = os.path.join(
+                    SPEAKER_IMAGE_PATH, SPEAKER_IMAGES.get(counter)
+                )
+                f = open(
+                    img_path,
+                    mode="rb",
+                )
+                image_file = File(f)
+                object.image.save(
+                    SPEAKER_IMAGES.get(counter), image_file, save=True
+                )
+                self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
+        count = Speaker.objects.all().count()
+        self.stdout.write(
+            self.style.SUCCESS(f"{SPEAKER_CSV} {MESSAGE} {count}")
+        )
 
     def load_users(self):
         """Загрузка пользователей."""
@@ -128,24 +137,31 @@ class Command(BaseCommand):
         for row in DictReader(f=open(USERS_CSV, encoding=UTF)):
             counter += 1
             object, created = User.objects.update_or_create(**row)
-            img_path = os.path.join(USER_IMAGE_PATH, USER_IMAGES.get(counter))
-            f = open(
-                img_path,
-                mode="rb",
-            )
-            image_file = File(f)
-            object.avatar.save(USER_IMAGES.get(counter), image_file, save=True)
-            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
-        self.stdout.write(self.style.SUCCESS(f"{USERS_CSV} {MESSAGE}"))
+            if created:
+                img_path = os.path.join(
+                    USER_IMAGE_PATH, USER_IMAGES.get(counter)
+                )
+                f = open(
+                    img_path,
+                    mode="rb",
+                )
+                image_file = File(f)
+                object.avatar.save(
+                    USER_IMAGES.get(counter), image_file, save=True
+                )
+                self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
+        count = User.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"{USERS_CSV} {MESSAGE} {count}"))
 
     def load_users_tags(self):
         """Загрузка тегов пользователя."""
 
         for row in DictReader(f=open(USERS_TAGS_CSV, encoding=UTF)):
-            user_object = User.objects.get(pk=row.get("user_id"))
+            user = User.objects.get(pk=row.get("user_id"))
             tag = Tag.objects.get(pk=row.get("tag_id"))
-            user_object.tags.add(tag)
-            user_object.save()
+            if tag not in user.tags.all():
+                user.tags.add(tag)
+                user.save()
         self.stdout.write(self.style.SUCCESS(f"{USERS_TAGS_CSV} {MESSAGE}"))
 
     def load_users_cities(self):
@@ -154,8 +170,9 @@ class Command(BaseCommand):
         for row in DictReader(f=open(USERS_CITIES_CSV, encoding=UTF)):
             user = User.objects.get(pk=row.get("user_id"))
             city = City.objects.get(pk=row.get("city_id"))
-            user.cities.add(city)
-            user.save()
+            if city not in user.cities.all():
+                user.cities.add(city)
+                user.save()
         self.stdout.write(self.style.SUCCESS(f"{USERS_CITIES_CSV} {MESSAGE}"))
 
     def load_users_notifications(self):
@@ -167,7 +184,10 @@ class Command(BaseCommand):
             NotificationSwitch.objects.update_or_create(
                 user=user_object, **row
             )
-        self.stdout.write(self.style.SUCCESS(f"{NOTIFICATION_CSV} {MESSAGE}"))
+        count = NotificationSwitch.objects.all().count()
+        self.stdout.write(
+            self.style.SUCCESS(f"{NOTIFICATION_CSV} {MESSAGE} {count}")
+        )
 
     def load_event(self):
         """Загрузка Event."""
@@ -180,41 +200,49 @@ class Command(BaseCommand):
             )
             event_type = EventType.objects.get(pk=row.pop("type_id"))
             city = City.objects.get(pk=row.pop("city_id"))
-            event_object, created = Event.objects.get_or_create(
-                type=event_type,
-                date=event_date,
-                city=city,
-                **row,
-            )
-            img_path = os.path.join(
-                EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter)
-            )
-            f = open(
-                img_path,
-                mode="rb",
-            )
-            preview_image_file = File(f)
-            event_object.preview_image.save(
-                EVENT_PREVIEW_IMAGES.get(counter),
-                preview_image_file,
-                save=True,
-            )
-            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
-            img_path = os.path.join(
-                EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter)
-            )
-            f = open(
-                img_path,
-                mode="rb",
-            )
-            full_image_file = File(f)
-            event_object.image.save(
-                EVENT_FULL_IMAGES.get(counter), full_image_file, save=True
-            )
-            self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
-            event_object.save()
+            slug = row.pop("slug")
+            created = False
+            if not Event.objects.filter(slug=slug).exists():
+                event_object, created = Event.objects.get_or_create(
+                    type=event_type,
+                    date=event_date,
+                    city=city,
+                    slug=slug,
+                    **row,
+                )
+            else:
+                event_object = Event.objects.get(slug=slug)
+            if created:
+                img_path = os.path.join(
+                    EVENT_IMAGE_PATH, EVENT_PREVIEW_IMAGES.get(counter)
+                )
+                f = open(
+                    img_path,
+                    mode="rb",
+                )
+                preview_image_file = File(f)
+                event_object.preview_image.save(
+                    EVENT_PREVIEW_IMAGES.get(counter),
+                    preview_image_file,
+                    save=True,
+                )
+                self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
+                img_path = os.path.join(
+                    EVENT_IMAGE_PATH, EVENT_FULL_IMAGES.get(counter)
+                )
+                f = open(
+                    img_path,
+                    mode="rb",
+                )
+                full_image_file = File(f)
+                event_object.image.save(
+                    EVENT_FULL_IMAGES.get(counter), full_image_file, save=True
+                )
+                self.stdout.write(self.style.SUCCESS(f"{img_path} {MESSAGE}"))
+                event_object.save()
 
-        self.stdout.write(self.style.SUCCESS(f"{EVENT_CSV} {MESSAGE}"))
+        count = Event.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"{EVENT_CSV} {MESSAGE} {count}"))
 
     def load_event_tags(self):
         """Загрузка тегов."""
@@ -222,8 +250,9 @@ class Command(BaseCommand):
         for row in DictReader(f=open(EVENT_TAG_CSV, encoding=UTF)):
             event_object = Event.objects.get(pk=row.get("event_id"))
             tag = Tag.objects.get(pk=row.get("tag_id"))
-            event_object.tags.add(tag)
-            event_object.save()
+            if tag not in event_object.tags.all():
+                event_object.tags.add(tag)
+                event_object.save()
 
         self.stdout.write(self.style.SUCCESS(f"{EVENT_TAG_CSV} {MESSAGE}"))
 
@@ -240,7 +269,10 @@ class Command(BaseCommand):
                 event=event,
                 **row,
             )
-        self.stdout.write(self.style.SUCCESS(f"{EVENT_STEPS_CSV} {MESSAGE}"))
+        count = EventStep.objects.all().count()
+        self.stdout.write(
+            self.style.SUCCESS(f"{EVENT_STEPS_CSV} {MESSAGE} {count}")
+        )
 
     def load_event_steps_speakers(self):
         """Загрузка спикеров этапов ивентов рандомная загрузка."""
@@ -252,8 +284,9 @@ class Command(BaseCommand):
         for step in event_steps:
             step_speakers_number = randint(1, speakers_number)
             for i in range(step_speakers_number):
-                step.speakers.add(speakers[i])
-                step.save()
+                if speakers[i] not in step.speakers.all():
+                    step.speakers.add(speakers[i])
+                    step.save()
         self.stdout.write(
             self.style.SUCCESS(f"{EVENT_STEPS_SPEAKERS_MESSAGE} {MESSAGE}")
         )
@@ -267,13 +300,20 @@ class Command(BaseCommand):
             date_create = datetime.datetime.strptime(
                 row.pop("date_create"), "%Y-%m-%d"
             )
-            Registration.objects.update_or_create(
+            if not Registration.objects.filter(
                 event=event,
                 user=user,
-                date_create=date_create,
-                **row,
-            )
-        self.stdout.write(self.style.SUCCESS(f"{REGISTRATION_CSV} {MESSAGE}"))
+            ).exists():
+                Registration.objects.update_or_create(
+                    event=event,
+                    user=user,
+                    date_create=date_create,
+                    **row,
+                )
+        count = Registration.objects.all().count()
+        self.stdout.write(
+            self.style.SUCCESS(f"{REGISTRATION_CSV} {MESSAGE} {count}")
+        )
 
     def load_favorites(self):
         """Загрузка изьранных событий."""
@@ -281,10 +321,10 @@ class Command(BaseCommand):
         for row in DictReader(f=open(EVENT_FAVORITE_CSV, encoding=UTF)):
             user = User.objects.get(pk=row.get("user_id"))
             event = Event.objects.get(pk=row.get("event_id"))
-            event.favorited_by.add(user)
-            event.save()
-            user.save()
-
+            if user not in event.favorited_by.all():
+                event.favorited_by.add(user)
+                event.save()
+                user.save()
         self.stdout.write(
             self.style.SUCCESS(f"{EVENT_FAVORITE_CSV} {MESSAGE}")
         )
