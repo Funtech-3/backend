@@ -1,7 +1,7 @@
+from api.v1.views_tickets import CheckTicketViewSet, UserTicketViewSet
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
-from tickets.views import CheckTicketViewSet, UserTicketViewSet
 from users.views import (
     CitiesListView,
     CustomUserViewSet,
