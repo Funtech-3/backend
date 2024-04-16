@@ -37,7 +37,7 @@ jobs:
         pip install flake8==7.0.0 flake8-isort==6.1.1
         pip install -r ./backend/requirements.txt
 
-    - name: Test with flake8
+    - name: Test with flake8 and django tests
       env:
         POSTGRES_USER: funtech_user
         POSTGRE_PASSWORD: funtech_secret_password
@@ -46,3 +46,5 @@ jobs:
         DB_PORT: 5432
       run: |
         python -m flake8 --config=pyproject.toml --ignore=E203,E266,E501,W503,F403,F401 backend/
+        cd backend/
+        pytest
