@@ -82,6 +82,7 @@ class TestEventAPI:
             "У анонимных пользователей не должно быть возможности "
             "добавить событие в избранное."
         )
+        assert event.favorited_by.count() == 0
 
     def test_favorite_delete_not_auth(self, client, event, url_event_favorite):
         response = client.delete(url_event_favorite)
@@ -90,7 +91,9 @@ class TestEventAPI:
             "удалить событие из избранного."
         )
 
-    def test_favorite_post_auth(self, user_client, url_event_favorite, user, event):
+    def test_favorite_post_auth(
+        self, user_client, url_event_favorite, user, event
+    ):
         response = user_client.post(url_event_favorite)
         assert response.status_code == HTTPStatus.CREATED
         assert user.favorite_events.filter(id=event.pk).exists()
