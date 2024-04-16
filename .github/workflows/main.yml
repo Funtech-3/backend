@@ -116,4 +116,4 @@ jobs:
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/static/. /static_backend/static/
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py make_admin
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_test_data
-            docker image prune -a -f --filter "until=24h"
+            sudo docker image prune -a -f --filter "until=24h"
