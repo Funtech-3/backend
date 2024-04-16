@@ -9,8 +9,8 @@ from users.views import (
     UserInterestsAPIView,
     UserNotificationsAPIView,
 )
-from .views_events import EventViewSet, FavoriteView
 
+from .views_events import EventViewSet, FavoriteView
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r"events", EventViewSet, basename="event")
@@ -33,9 +33,9 @@ urlpatterns = [
         name="user-notifications",
     ),
     path(
-        'events/<str:event_slug>/favorite/',
+        "events/<str:event_slug>/favorite/",
         FavoriteView.as_view(),
-        name="event-favorite"
+        name="event-favorite",
     ),
     path("", include(router_v1.urls)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),

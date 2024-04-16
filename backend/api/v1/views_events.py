@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from drf_spectacular.utils import extend_schema
+from events.filters import EventFilter
+from events.models import Event
+from events.serializers import EventDetailSerializer, EventPreviewSerializer
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -9,13 +12,10 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from events.filters import EventFilter
-from events.models import Event
-from events.serializers import EventDetailSerializer, EventPreviewSerializer
 from tickets.models import Registration
 
-EVENT_IN_FAVORITE = 'Событие {} уже есть в избранном.'
-EVENT_NOT_IN_FAVORITE = 'Событие {} не добавлено в избранное.'
+EVENT_IN_FAVORITE = "Событие {} уже есть в избранном."
+EVENT_NOT_IN_FAVORITE = "Событие {} не добавлено в избранное."
 
 
 class EventViewSet(ReadOnlyModelViewSet):
@@ -59,6 +59,7 @@ class EventViewSet(ReadOnlyModelViewSet):
 
 class FavoriteView(APIView):
     """Добавление события в избранное или удаление события из избранного."""
+
     permission_classes = [IsAuthenticated]
 
     @extend_schema(responses={201: EventDetailSerializer})
@@ -67,13 +68,11 @@ class FavoriteView(APIView):
         event = get_object_or_404(Event, slug=event_slug)
         user = request.user
         if user in event.favorited_by.all():
-            raise ValidationError(
-                {'errors': EVENT_IN_FAVORITE.format(event)}
-            )
+            raise ValidationError({"errors": EVENT_IN_FAVORITE.format(event)})
         event.favorited_by.add(user)
         return Response(
-            EventDetailSerializer(event, context={'request': request}).data,
-            status=status.HTTP_201_CREATED
+            EventDetailSerializer(event, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
         )
 
     def delete(self, request, event_slug):
@@ -82,7 +81,7 @@ class FavoriteView(APIView):
         user = request.user
         if user not in event.favorited_by.all():
             raise ValidationError(
-                {'errors': EVENT_NOT_IN_FAVORITE.format(event)}
+                {"errors": EVENT_NOT_IN_FAVORITE.format(event)}
             )
         event.favorited_by.remove(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
