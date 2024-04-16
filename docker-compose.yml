@@ -1,7 +1,7 @@
 version: '3.3'
 
 volumes:
-  pg_data16:
+  pg_data:
   static:
   media:
   service:
@@ -14,7 +14,7 @@ services:
       - "5432:5432"
     env_file: .env
     volumes:
-      - pg_data16:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
   backend:
     build:
@@ -29,9 +29,9 @@ services:
       - media:/app/media/
     ports:
       - "8000:8000"
-      # - "465:465"
     expose:
       - 465
+
   nginx:
     build:
       context: ./nginx/

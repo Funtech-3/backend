@@ -9,13 +9,14 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.db.utils import IntegrityError
+
 from events.models import City, Event, EventStep, EventType, Speaker, Tag
 from tickets.models import Registration
 from users.models import NotificationSwitch
 
 User = get_user_model()
 
-TEST_DATA_DIR_NAME = "test_data"
+TEST_DATA_DIR_NAME = "data"
 TEST_DATA_PATH = os.path.join(os.getcwd(), TEST_DATA_DIR_NAME)
 MESSAGE = "был успешно загружен в базу данных."
 UTF = "UTF-8"

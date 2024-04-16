@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+
 from tickets.models import Registration
 
 from .constants import LIMIT_POSTS_PER_PAGE
@@ -73,6 +74,7 @@ class UserAdmin(admin.ModelAdmin):
                     "telegram_username",
                     "position",
                     "work_place",
+                    "avatar",
                 )
             },
         ),

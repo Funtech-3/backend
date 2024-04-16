@@ -2,6 +2,7 @@ from datetime import date, time, timedelta
 from tempfile import NamedTemporaryFile
 
 import pytest
+
 from events.models import Event, EventStep, Speaker
 from users.models import City, Tag
 

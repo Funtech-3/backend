@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from users.serializers import TagsSerializer
 
 from .models import Event, EventStep, Speaker

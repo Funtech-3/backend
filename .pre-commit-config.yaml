@@ -3,7 +3,7 @@ repos:
     rev: v4.5.0
     hooks:
       - id: no-commit-to-branch
-        args: [-b, main,]
+        args: [-b, main, -b, dev]
       - id: detect-private-key
       - id: trailing-whitespace # убирает лишние пробелы
         args: [--markdown-linebreak-ext=md]
