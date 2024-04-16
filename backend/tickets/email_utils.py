@@ -35,7 +35,7 @@ def prepare_MIME_image_for_email(image: bytes) -> MIMEImage:
 
 
 def extract_ticket_info(ticket: Registration) -> dict:
-    """Извлекает данные из моделей о событие и регистрации для отправки,
+    """Извлекает данные из моделей о событии и регистрации для отправки,
     билета."""
     result = dict(
         event_name=ticket.event.title,
