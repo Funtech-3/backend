@@ -17,7 +17,7 @@ repos:
     rev: 24.1.1
     hooks:
       - id: black
-        language_version: python3.10
+        language_version: python3
         args: [--config=pyproject.toml, --exclude=migrations, --exclude=load_test_data.py]
 
   - repo: https://github.com/PyCQA/isort
