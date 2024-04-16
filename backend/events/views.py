@@ -62,6 +62,7 @@ class FavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, event_slug):
+        """Добавить событие в избранное."""
         event = get_object_or_404(Event, slug=event_slug)
         user = request.user
         if user in event.favorited_by.all():
@@ -75,6 +76,7 @@ class FavoriteView(APIView):
         )
 
     def delete(self, request, event_slug):
+        """Удалить событие из избранного."""
         event = get_object_or_404(Event, slug=event_slug)
         user = request.user
         if user not in event.favorited_by.all():
