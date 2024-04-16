@@ -46,7 +46,7 @@ services:
       - 6379:6379
 
   celery:
-    image: ${DOCKER_USERNAME}/${PROJECT_NAME}_celery
+    build: ./backend/
     command: celery -A funtech worker --loglevel=info
     env_file:
       - .env
