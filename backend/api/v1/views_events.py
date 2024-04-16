@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -10,9 +11,9 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from tickets.models import Registration
 
-from .filters import EventFilter
-from .models import Event
-from .serializers import EventDetailSerializer, EventPreviewSerializer
+from events.filters import EventFilter
+from events.models import Event
+from events.serializers import EventDetailSerializer, EventPreviewSerializer
 
 EVENT_IN_FAVORITE = 'Событие {} уже есть в избранном.'
 EVENT_NOT_IN_FAVORITE = 'Событие {} не добавлено в избранное.'
@@ -61,6 +62,7 @@ class FavoriteView(APIView):
     """Добавление события в избранное или удаление события из избранного."""
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses={201: EventDetailSerializer})
     def post(self, request, event_slug):
         """Добавить событие в избранное."""
         event = get_object_or_404(Event, slug=event_slug)

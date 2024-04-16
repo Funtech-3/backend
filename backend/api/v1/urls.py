@@ -1,7 +1,8 @@
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from events.views import EventViewSet, FavoriteView
 from rest_framework import routers
+
+from .views_events import EventViewSet, FavoriteView
 from tickets.views import CheckTicketViewSet, UserTicketViewSet
 from users.views import (
     CitiesListView,
