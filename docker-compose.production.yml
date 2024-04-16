@@ -49,7 +49,7 @@ services:
     image: ${DOCKER_USERNAME}/${PROJECT_NAME}_celery
     command: celery -A funtech worker --loglevel=info
     env_file:
-      - ../group_donations/.env
+      - .env
     volumes:
       - ./service:/service
     depends_on:
