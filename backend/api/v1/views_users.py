@@ -98,11 +98,11 @@ class CustomUserViewSet(ViewSet):
             return Response(response_data, status=CREATED)
         return Response(status=BAD_REQUEST)
 
-    def update(self, request, pk=None):
+    def partial_update(self, request, yandex_id=None):
         """Метод обновления данных о пользователе."""
         self.permission_classes = (IsAuthenticatedAndOwner,)
 
-        user = get_object_or_404(User, yandex_id=pk)
+        user = get_object_or_404(User, yandex_id=yandex_id)
         serializer = self.serializer_class(
             user, data=request.data, partial=True
         )
