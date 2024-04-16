@@ -4,6 +4,7 @@ from tempfile import NamedTemporaryFile
 import pytest
 
 from events.models import Event, EventStep, Speaker
+from tickets.models import Registration
 from users.models import City, Tag
 
 LEN_OBJ_IN_LIST = 5
@@ -93,3 +94,10 @@ def event_steps(db, events, speaker):
     for step in steps:
         step.speakers.add(speaker)
     return steps
+
+
+@pytest.fixture
+def registration(db, event, user):
+    return Registration.objects.create(
+        event=event, user=user, status=Registration.Status.CONFIRMED
+    )
