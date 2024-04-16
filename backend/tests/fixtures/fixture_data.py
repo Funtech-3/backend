@@ -98,7 +98,5 @@ def event_steps(db, events, speaker):
 @pytest.fixture
 def registration(db, event, user):
     return Registration.objects.create(
-        event=event,
-        user=user,
-        status=Registration.Status.CONFIRMED
+        event=event, user=user, status=Registration.Status.CONFIRMED
     )

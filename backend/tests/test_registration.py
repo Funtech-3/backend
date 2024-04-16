@@ -34,9 +34,7 @@ class TestTicketAPI:
         assert db_registration.user == user
         assert db_registration.event == event
 
-    def test_ticket_get_not_auth(
-        self, client, registration, url_user_ticket
-    ):
+    def test_ticket_get_not_auth(self, client, registration, url_user_ticket):
         response = client.get(url_user_ticket)
         assert response.status_code == HTTPStatus.UNAUTHORIZED, (
             "Запрос неавторизованного пользователя на чтение билета "
@@ -55,7 +53,7 @@ class TestTicketAPI:
             "city": registration.event.city.name,
             "code": registration.code,
             "name": registration.event.title,
-            "date_event": registration.event.date.isoformat()
+            "date_event": registration.event.date.isoformat(),
         }
         assert response_data == expected_fields
 
