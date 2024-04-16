@@ -53,6 +53,11 @@ class EventPreviewSerializer(serializers.ModelSerializer):
         source="date",
         read_only=True,
     )
+    is_in_favorites = serializers.SerializerMethodField(read_only=True)
+    is_registrated = serializers.SerializerMethodField(read_only=True)
+    user_registration_status = serializers.SerializerMethodField(
+        read_only=True
+    )
 
     class Meta:
         model = Event
@@ -66,46 +71,6 @@ class EventPreviewSerializer(serializers.ModelSerializer):
             "registration_status",
             "tags",
             "preview_image",
-        )
-        read_only_fields = fields
-
-
-class EventDetailSerializer(EventPreviewSerializer):
-    """Сериализатор события с подробной информацией."""
-
-    event_type = serializers.SlugRelatedField(
-        source="type", read_only=True, slug_field="title"
-    )
-    event_program = StepReadSerializer(
-        source="steps", read_only=True, many=True
-    )
-    is_in_favorites = serializers.SerializerMethodField(read_only=True)
-    is_registrated = serializers.SerializerMethodField(read_only=True)
-    user_registration_status = serializers.SerializerMethodField(
-        read_only=True
-    )
-    event_detail_image = serializers.ImageField(source="image", read_only=True)
-    event_format = serializers.CharField(source="mode", read_only=True)
-    event_description = serializers.CharField(
-        source="description", read_only=True
-    )
-
-    class Meta:
-        model = Event
-        fields = (
-            "event_id",
-            "slug",
-            "name",
-            "city",
-            "address",
-            "date_event",
-            "registration_status",
-            "tags",
-            "event_detail_image",
-            "event_description",
-            "event_type",
-            "event_format",
-            "event_program",
             "is_in_favorites",
             "is_registrated",
             "user_registration_status",
@@ -134,3 +99,41 @@ class EventDetailSerializer(EventPreviewSerializer):
         if registrations:
             return registrations[0].status
         return ""
+
+
+class EventDetailSerializer(EventPreviewSerializer):
+    """Сериализатор события с подробной информацией."""
+
+    event_type = serializers.SlugRelatedField(
+        source="type", read_only=True, slug_field="title"
+    )
+    event_program = StepReadSerializer(
+        source="steps", read_only=True, many=True
+    )
+    event_detail_image = serializers.ImageField(source="image", read_only=True)
+    event_format = serializers.CharField(source="mode", read_only=True)
+    event_description = serializers.CharField(
+        source="description", read_only=True
+    )
+
+    class Meta:
+        model = Event
+        fields = (
+            "event_id",
+            "slug",
+            "name",
+            "city",
+            "address",
+            "date_event",
+            "registration_status",
+            "tags",
+            "event_detail_image",
+            "event_description",
+            "event_type",
+            "event_format",
+            "event_program",
+            "is_in_favorites",
+            "is_registrated",
+            "user_registration_status",
+        )
+        read_only_fields = fields

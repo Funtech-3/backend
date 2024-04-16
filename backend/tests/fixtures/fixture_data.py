@@ -66,11 +66,11 @@ def event(db, city, image, tag):
 def event_list(db, city, image):
     return Event.objects.bulk_create(
         Event(
-            title=f'Тестовое событие {index}',
-            description='Тестовое',
-            slug=f'test-event-{index}',
+            title=f"Тестовое событие {index}",
+            description="Тестовое",
+            slug=f"test-event-{index}",
             city=city,
-            address='Зимний дворец',
+            address="Зимний дворец",
             date=date.today() + timedelta(days=index),
             image=image,
         )
