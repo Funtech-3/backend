@@ -4,4 +4,4 @@ RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 COPY . .
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "funtech.wsgi"]
+CMD ["sh", "-c", "celery -A funtech worker --loglevel=info & gunicorn --bind 0.0.0.0:8000 funtech.wsgi"]

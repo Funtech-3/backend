@@ -2,6 +2,8 @@ from http.client import BAD_REQUEST, CREATED, OK
 
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
@@ -140,7 +142,7 @@ class UserNotificationsAPIView(APIView):
             return Response(cache_data, status=OK)
         notifications = self.get_notification_instance()
         serializer = NotificationSwitchSerializer(notifications)
-        cache.set(self.cache_key, serializer.data, self.cache_time)
+        cache.set(self.get_cache_key, serializer.data, self.cache_time)
         return Response(serializer.data, status=OK)
 
     def patch(self, request):
@@ -187,20 +189,46 @@ class UserInterestsAPIView(RetrieveUpdateAPIView):
 class TagsListView(ListAPIView):
     """Представление тегов для главной страницы."""
 
+    cache_key = "tags_list_key"
+    cache_time = 60 * 120
     serializer_class = TagsSerializer
-    queryset = Tag.objects.all()
     pagination_class = None
+
+    def get_queryset(self):
+        queryset = cache.get(self.cache_key)
+        if not queryset:
+            queryset = Tag.objects.all()
+            cache.set(self.cache_key, queryset, self.cache_time)
+        return queryset
 
     def get_object(self):
         return self.request.user
+
+
+@receiver([post_save, post_delete], sender=Tag)
+def invalidate_tag_cache(sender, instance, **kwargs):
+    cache.delete("tags_list_key")
 
 
 class CitiesListView(ListAPIView):
     """Представление городов для главной страницы."""
 
+    cache_key = "cities_list_key"
+    cache_time = 60 * 120
     serializer_class = CitiesSerializer
-    queryset = City.objects.all()
     pagination_class = None
+
+    def get_queryset(self):
+        queryset = cache.get(self.cache_key)
+        if not queryset:
+            queryset = City.objects.all()
+            cache.set(self.cache_key, queryset, self.cache_time)
+        return queryset
 
     def get_object(self):
         return self.request.user
+
+
+@receiver([post_save, post_delete], sender=City)
+def invalidate_cities_cache(sender, instance, **kwargs):
+    cache.delete("cities_list_key")
