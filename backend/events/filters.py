@@ -3,7 +3,6 @@ from datetime import date
 from django_filters import rest_framework as filters
 
 from users.models import Tag
-
 from .models import City, Event
 
 
