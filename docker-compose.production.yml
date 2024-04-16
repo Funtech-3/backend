@@ -1,0 +1,64 @@
+version: '3.8'
+
+volumes:
+  pg_data:
+  static:
+  media:
+  service:
+
+services:
+  db:
+    image: postgres:16.2-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    image: ${DOCKER_USERNAME}/${PROJECT_NAME}_backend
+    env_file: .env
+    volumes:
+      - static:/static_backend/
+      - media:/app/media/
+    depends_on:
+      - db
+    expose:
+      - 465
+
+  gateway:
+    image: ${DOCKER_USERNAME}/${PROJECT_NAME}_gateway
+    env_file: .env
+    volumes:
+      - static:/staticfiles/
+      - media:/media/
+    ports:
+      - 8000:80
+    depends_on:
+      - backend
+      - db
+
+  redis:
+    image: redis:alpine
+    restart: on-failure
+    ports:
+      - 6379:6379
+
+  celery:
+    image: celery
+    command: celery -A funtech worker --loglevel=info
+    env_file:
+      - .env
+    volumes:
+      - ./service:/service
+    depends_on:
+      - redis
+      - db
+
+  frontend:
+    image: ${DOCKER_USERNAME_FRONT}/${PROJECT_NAME_FRONT}
+    env_file: .env
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static:/frontend_static

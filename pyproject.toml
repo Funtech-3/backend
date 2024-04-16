@@ -1,0 +1,17 @@
+[tool.flake8]
+max-complexity = 10
+line_length = 120
+ignore = "E203, E266, E501, W503, F403, F401"
+exclude = ".git, .mypy_cache, .pytest_cache, build, dist, migrations, settings"
+
+[tool.isort]
+profile = "black"
+line_length = 79
+skip_glob = ["**/migrations/*.py"]
+known_first_party = ["users" ,"events", "tickets"]
+sections = "STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+no_lines_before = "LOCALFOLDER"
+
+[tool.black]
+line-length = 79
+target-version = ['py312']

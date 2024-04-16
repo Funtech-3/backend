@@ -1,0 +1,48 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: no-commit-to-branch
+        args: [-b, main, -b, dev]
+      - id: detect-private-key
+      - id: trailing-whitespace # убирает лишние пробелы
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer # добавляет пустую строку в конце файла
+      - id: check-yaml # проверяет синтаксис yml файлов
+      - id: check-added-large-files # проверяет тяжелые файлы на изменения
+      - id: check-merge-conflict # проверяет файлы, содержащие конфликтные строки слияния
+
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.1.1
+    hooks:
+      - id: black
+        language_version: python3.12
+        args: [--config=pyproject.toml, --exclude=migrations, --exclude=load_test_data.py]
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [ --profile, black, --filter-files ]
+
+# Обновляет синтаксис Python кода в соответствии с последними версиями
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.1
+    hooks:
+    -   id: pyupgrade
+        args: [--py310-plus]
+
+# Сканер стилистических ошибок, нарушающие договоренности PEP8
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        entry: pflake8
+        additional_dependencies: [pyproject-flake8]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        exclude: migrations
