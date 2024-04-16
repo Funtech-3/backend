@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+
 from tickets.models import Registration
 
 

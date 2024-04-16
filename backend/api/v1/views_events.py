@@ -36,23 +36,20 @@ class EventViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         if self.action == "retrieve":
-            return Event.objects.prefetch_related("tags", "steps")
-        return Event.objects.prefetch_related("tags")
+            queryset = Event.objects.prefetch_related("tags", "steps")
+        queryset = Event.objects.prefetch_related("tags")
+
+        cached_queryset = cache.get(self.cache_key)
+        if cached_queryset:
+            return cached_queryset
+        else:
+            cache.set(self.cache_key, queryset, self.cache_time)
+            return queryset
 
     def get_serializer_class(self):
         if self.action == "retrieve":
             return EventDetailSerializer
         return EventPreviewSerializer
-
-    def list(self, request, *args, **kwargs):
-        cached_data = cache.get(self.cache_key)
-        if cached_data:
-            return Response(cached_data)
-
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        cache.set(self.cache_key, serializer.data, self.cache_time)
-        return Response(serializer.data, status=OK)
 
     @action(
         detail=False,
@@ -77,7 +74,7 @@ class EventViewSet(ReadOnlyModelViewSet):
 
 @receiver([post_save, post_delete], sender=Event)
 def invalidate_event_cache(sender, instance, **kwargs):
-    cache.delete("events_key")
+    cache.delete(EventViewSet.cache_key)
 
 
 class FavoriteView(APIView):

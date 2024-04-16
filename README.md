@@ -23,7 +23,7 @@ funtech.myddns.me/api/v1/schema/docs/
 - идентификатор и UUID-код билета становятся доступны на соответствующих эндпоинтах API,
 - пользователю по электронной почте отправляется письмо с билетом на событие, в письме содержится qr-код билета.
 
-![Github Actions main workflow](https://github.com/LynnG3/Pay2U_back_4/actions/workflows/main.yml/badge.svg)
+[![Main Funtech deploy](https://github.com/Funtech-3/backend/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Funtech-3/backend/actions/workflows/main.yml)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=20B2AA)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
