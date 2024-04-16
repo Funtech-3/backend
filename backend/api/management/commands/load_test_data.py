@@ -136,7 +136,12 @@ class Command(BaseCommand):
         counter = 0
         for row in DictReader(f=open(USERS_CSV, encoding=UTF)):
             counter += 1
-            object, created = User.objects.update_or_create(**row)
+            yandex_id = int(row.get("yandex_id"))
+            created = False
+            if not User.objects.filter(yandex_id=yandex_id).exists():
+                object, created = User.objects.update_or_create(**row)
+            else:
+                object = User.objects.get(yandex_id=yandex_id)
             if created:
                 img_path = os.path.join(
                     USER_IMAGE_PATH, USER_IMAGES.get(counter)
