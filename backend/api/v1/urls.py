@@ -1,8 +1,6 @@
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
-
-from .views_events import EventViewSet, FavoriteView
 from tickets.views import CheckTicketViewSet, UserTicketViewSet
 from users.views import (
     CitiesListView,
@@ -11,6 +9,8 @@ from users.views import (
     UserInterestsAPIView,
     UserNotificationsAPIView,
 )
+from .views_events import EventViewSet, FavoriteView
+
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r"events", EventViewSet, basename="event")

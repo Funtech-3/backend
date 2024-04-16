@@ -9,11 +9,10 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from tickets.models import Registration
-
 from events.filters import EventFilter
 from events.models import Event
 from events.serializers import EventDetailSerializer, EventPreviewSerializer
+from tickets.models import Registration
 
 EVENT_IN_FAVORITE = 'Событие {} уже есть в избранном.'
 EVENT_NOT_IN_FAVORITE = 'Событие {} не добавлено в избранное.'
