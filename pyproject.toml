@@ -9,7 +9,7 @@ profile = "black"
 line_length = 79
 skip_glob = ["**/migrations/*.py"]
 known_first_party = ["users" ,"events", "tickets"]
-no_lines_before = "LOCALFORLDER"
+no_lines_before = "LOCALFOLDER"
 
 [tool.black]
 line-length = 79
