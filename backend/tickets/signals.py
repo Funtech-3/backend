@@ -1,12 +1,11 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from tickets.email_utils import send_ticket_info
 from tickets.models import Registration
-from users.models import NotificationSwitch
 
 
 @receiver(pre_save, sender=Registration)
-def watch_registration_status(sender, instance, **kwargs):
+def registration_status_pre_save_signal(sender, instance, **kwargs):
     """Сигнал для модели Registration отслеживает событие перед сохранение.
     Если статус регистрации меняется на CONFIRMED и включены уведомления
     на email, на почту клиента."""

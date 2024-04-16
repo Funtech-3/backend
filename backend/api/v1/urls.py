@@ -1,8 +1,8 @@
+from api.v1.views_tickets import CheckTicketViewSet, UserTicketViewSet
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from events.views import EventViewSet, FavoriteView
 from rest_framework import routers
-from tickets.views import CheckTicketViewSet, UserTicketViewSet
 from users.views import (
     CitiesListView,
     CustomUserViewSet,
@@ -32,9 +32,9 @@ urlpatterns = [
         name="user-notifications",
     ),
     path(
-        'events/<str:event_slug>/favorite/',
+        "events/<str:event_slug>/favorite/",
         FavoriteView.as_view(),
-        name="event-favorite"
+        name="event-favorite",
     ),
     path("", include(router_v1.urls)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
