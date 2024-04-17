@@ -37,6 +37,10 @@ funtech.myddns.me/api/v1/schema/docs/
  - Nginx
  - Python
  - PostgreSQL
+ - Sentry
+ - CI/CD
+ - Celery
+ - Redis
 
 ## __Как развернуть проект__
 
