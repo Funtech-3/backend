@@ -7,12 +7,12 @@ Funtech - это веб-приложение, разработанное для 
 
 #### сайт доступен по адресу:
 ```bash
-funtech.myddns.me
+[funtech.myddns.me](https://funtech.myddns.me/)
 ```
 
 #### документация к API доступна по адресу:
 ```bash
-funtech.myddns.me/api/v1/schema/docs/
+[funtech.myddns.me/api/v1/schema/docs/](https://funtech.myddns.me/api/v1/schema/docs/)
 ```
 
 #### Как работает функция регистрации на событие и получение билета
