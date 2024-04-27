@@ -3,7 +3,6 @@ name: Funtech deploy
 on:
   workflow_call:
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
