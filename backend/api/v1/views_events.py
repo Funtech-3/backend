@@ -61,14 +61,18 @@ class EventViewSet(ReadOnlyModelViewSet):
     )
     def registration(self, request, **kwargs):
         """Зарегистрироваться на событие."""
+        event = self.get_object()
         if request.method == "POST":
-            event = self.get_object()
             object, created = Registration.objects.get_or_create(
                 user=self.request.user, event=event
             )
             if object:
                 return Response(status=CREATED)
             return Response(status=BAD_REQUEST)
+        object = Registration.objects.filter(
+            user=self.request.user, event=event
+        )
+        object.delete()
         return Response(status=NO_CONTENT)
 
 
