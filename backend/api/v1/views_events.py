@@ -53,9 +53,7 @@ class EventViewSet(ReadOnlyModelViewSet):
 
     @action(
         detail=False,
-        methods=[
-            "POST",
-        ],
+        methods=["POST", "DELETE"],
         url_path=r"(?P<slug>[\w-]+)/registration",
         permission_classes=[
             IsAuthenticated,
@@ -63,13 +61,15 @@ class EventViewSet(ReadOnlyModelViewSet):
     )
     def registration(self, request, **kwargs):
         """Зарегистрироваться на событие."""
-        event = self.get_object()
-        object, created = Registration.objects.get_or_create(
-            user=self.request.user, event=event
-        )
-        if object:
-            return Response(status=CREATED)
-        return Response(status=BAD_REQUEST)
+        if request.method == "POST":
+            event = self.get_object()
+            object, created = Registration.objects.get_or_create(
+                user=self.request.user, event=event
+            )
+            if object:
+                return Response(status=CREATED)
+            return Response(status=BAD_REQUEST)
+        return Response(status=NO_CONTENT)
 
 
 @receiver([post_save, post_delete], sender=Event)
