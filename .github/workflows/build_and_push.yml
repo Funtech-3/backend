@@ -1,11 +1,10 @@
-name: Main Funtech deploy
+name: Funtech build and call deploy
 on:
-  repository_dispatch:
-    types: [run-backend-workflow]
   push:
     branches: [ 'main', 'dev']
     paths-ignore:
       - "**/README.md"
+  workflow_dispatch:
 
 jobs:
   build_backend_and_push_to_docker_hub:
@@ -56,7 +55,7 @@ jobs:
         refs/heads/develop
         refs/heads/main
       ', github.ref)
-    uses: Funtech-3/backend/.github/workflows/deploy.yml@develop
+    uses: Funtech-3/backend/.github/workflows/deploy.yml@dev
     needs:
       - build_backend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
